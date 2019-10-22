@@ -51,7 +51,7 @@
           "type": ["number", "string", "array", "object"]
         },
         "number": {
-          "$comment": "an integer or floating point JSON number. Brat does not currently specify or implement rationals or complex / other multi-dimensional types as primitives."
+          "$comment": "an integer or floating point JSON number. Brat does not currently specify or implement rationals or complex / other multi-dimensional types as primitives.",
           "not": { "properties": { "_value": { "type": "string" } } },
           "properties": {
             "_value": { "type": "number" },
@@ -73,7 +73,7 @@
           }
         },
         "regex": {
-          "$comment": "",
+          "$comment": "a regular expression, with or without flags",
           "definitions": {
             "simple": {
               "type": "string", "format": "regex"
@@ -115,6 +115,7 @@
           }
         },
         "compound": {
+          "$comment": "the 2 kinds of nested / structure literals: array and hash. these can be deep literals if they only contain other literal values, but by default allow arbitrary AST node children",
           "definitions": {
             "deep": {
               "oneOf": [

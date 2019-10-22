@@ -44,7 +44,7 @@
   { "_comment": true, "_value": [
     [ "hello line ", 1, "i am the", true, "first line of this", {"kind": "comment"} ],
     [ "i am line", 2 ]
-  ] },
+  ] }
 
 
 ]
