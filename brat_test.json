@@ -1,0 +1,50 @@
+[
+  { "_comment": true, "_value": "a simple comment" },
+
+  { "_literal": true, "_value": 1 },
+  { "_literal": true, "_value": "not symbolifiable" },
+  { "_comment": true, "_comment_value": "will fail",
+    "_literal": true, "_value": "not symbolifiable", "_kind": "_symbol" },
+
+  { "_literal": true, "_value": "is_symbolifiable", "_kind": "_symbol" },
+
+  { "_literal": true, "_value": "a regex", "_kind": "_regex" },
+  { "_literal": true, "_value": { "_pattern": "a regex", "_flags": "i" }, "_kind": "_regex" },
+  { "_literal": true, "_value": { "_pattern": "a regex", "_flags": "im" }, "_kind": "_regex" },
+  { "_literal": true, "_value": { "_pattern": "a regex", "_flags": ["i"] }, "_kind": "_regex" },
+  { "_literal": true, "_value": { "_pattern": "a regex", "_flags": ["im"] }, "_kind": "_regex" },
+  { "_literal": true, "_value": { "_pattern": "a regex", "_flags": ["i", "m"] }, "_kind": "_regex" },
+
+  { "_comment": true, "_value": "" },
+  { "_literal": true, "_value": [1] },
+  { "_literal": true, "_value": [ { "_literal": true, "_value": "a string" } ] },
+  { "_literal": true, "_value": [ {"_var_by_name": true, "_name": "x"} ] },
+  { "_literal": true, "_value": { "a": 1}, "_kind": "_hash" },
+  { "_literal": true, "_value": { "a": { "_var_by_name": true, "_name": "x" } }, "_kind": "_hash" },
+  { "_literal": true, "_value": [ [1] ], "_kind": "_deep_array" },
+  { "_literal": true, "_value": [ "a" ], "_kind": "_deep_array" },
+  { "_literal": true, "_value": { "a": 1}, "_kind": "_deep_hash" },
+  { "_literal": true, "_value": { "a": "a"}, "_kind": "_deep_hash" },
+
+  { "_comment": true, "_literal": true, "_value": "invoke a variable by name, this one does not exist yet (and would be an error when processing scopes for this AST)" },
+  { "_var_by_name": true, "_name": "x" },
+
+  { "_comment": true, "_literal": true, "_value": "assign a value to x, creating it in this scope" },
+  { "_assignment": true,
+    "_lhs": { "_var_by_name": true, "_name": "x" },
+    "_rhs": { "_literal": true, "_value": "Hello, World!" }
+  },
+
+  { "_comment": true, "_literal": true, "_value": "apply the pre-defined p function to x" },
+  { "_function_application": true,
+    "_function": { "_var_by_name": true, "_name": "p" },
+    "_positional_args": [{ "_var_by_name": true, "_name": "x" }]
+  },
+
+  { "_comment": true, "_value": [
+    [ "hello line ", 1, "i am the", true, "first line of this", {"kind": "comment"} ],
+    [ "i am line", 2 ]
+  ] },
+
+
+]

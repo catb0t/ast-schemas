@@ -1,0 +1,18 @@
+macro: ast [, ...] -> ast 
+["let", {"a": {"lit": "s"}}, {"b": "a"}]
+["let", ["add", {"let": ["x", "y"], "in": ["__add", "x", "y"], "for": "z"}]]
+["let", ["sub", {"in": ["__sub", {"_": 0}, {"_": 1}]}]]
+["comptime", ["add", 1, 2]]
+["comptime", {"add": [1, 2], "sub": [{"ref": "$/add"}. 3]}] # compile time: {add = 3, sub = 0}
+
+compile time execution
+compile to brat
+compile to python
+macros
+actors
+immutability 
+let is the primary definition
+{"lit": x} makes x a literal object
+{"let": ["a", "b"]} binds the arguments to a and b
+{"in": ["+", "a", "b"]} adds b and a
+{"macro": 

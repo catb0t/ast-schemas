@@ -1,0 +1,385 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  # 2019-09 anchor
+  "$id": "pyrat",
+  "$comment": "blah",
+  "title": "pyrat specifier",
+  "description": "pyrat ast description",
+
+  # 2019-09 $defs
+  "definitions": {
+    /* a literal name that is or can be bound
+      the string '1' is a bindable name but MUST be treated separately from
+        the integer value 1
+
+      it doesn't seem useful to allow a number where a binding_name is expected
+        so "":{1}, is not allowed
+
+      however, ['a', 'b'] and "":{ 'a': 'x' }, contain binding names, but
+        are not themselves
+      see binding_target
+
+      the (result of) an expression or applicaiton can be a binding_target,
+        but is not a literal binding name */
+    "binding_name": { "type": "string" },
+
+    /* give a value a computed non-literal name
+      */
+    "(__computed)": {
+      "properties": {
+        /* make the current object in an object accessible by another key than
+          its literal declaration
+
+          a compiler error SHOULD be given if this overlaps with an existing key
+            in a JSON object or literal object value
+          */
+        "key": { "$ref": "#/definitions/basic_value" },
+        /* give a value a bound name in the current scope
+
+          this can be used to make a value available with $bind as well
+            as $lex
+
+          a compiler error MUST be produced if the requested binding name
+            entirely overlaps with an existing name of the same qualification
+            in the current lexical scope
+          */
+        "bind": { "$ref": "#/definitions/basic_value" }
+      }
+    },
+
+    /* a primitive that evaluates to its primitive JSON subobject
+      this only applies to the outer level, any inner objects are not literalized
+      */
+    "literal": {
+      "definitions": {
+        /*  a literal that may exist outside of a "":{'lit': x},
+          in other words, a form whose application is identity
+          it seems obvious that [1] (apply number) should be 1
+
+          and i can't think of what else it could possibly do */
+        "bare": { "type": "number" },
+
+        # the syntactical literal inside of a "":{'lit': 'str'},
+        "lexical": {
+          "type": [
+            "string", "number", "boolean", "null", "object", "array" ]
+        }
+      },
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["lit"],
+      "properties": {
+        "lit": {
+          "anyOf": [
+            { "$ref": "#/definitions/literal/definitions/lexical" },
+            { "$ref": "#/definitions/basic_value" }
+          ]
+        },
+        # deep: true treats all subobjects as recursively literalized
+        "deep": { "$ref": "#/definitions/basic_value" },
+        /* apply: true first applies the value, then literalizes the result
+          using a number instead applies the value that many times
+
+          this has to be a primitive because there's otherwise no way
+            to prevent the first layer from being an actual literal
+          without some silly prefix like '\c' to literalize the binding c
+          */
+        "apply": { "$ref": "#/definitions/basic_value" },
+        # declare the type of this literal
+        "type": { "$ref": "#/definitions/basic_value" }
+      }
+    },
+
+    /* any reference */
+    "reference": {
+      "definitions": {
+        /* a syntactical reference
+          allows access to any value in the AST from anywhere else in the AST,
+            provided you know the path and have access to the namespace
+          resolution for this should be as simple as schema $ref resolution
+            because paths are unique
+          the format is a superset of schema $ref format, because
+            of needing to access y in [x, y, z]
+
+          any value can be used to construct a reference
+
+          this allows such novelties as accessing values from the object currently
+            being constructed, which is not possible in most languages */
+        "lexical": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["$lex"],
+          "properties": {
+            "$lex": { "$ref": "#/definitions/basic_value" }
+          }
+        },
+
+        /* a name reference
+          allows access to a name across scopes,
+            provided you know the name and can access the namespace
+          */
+        "binding": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["$bind"],
+          "properties": {
+            "$bind": { "$ref": "#/definitions/basic_value" }
+          }
+        },
+      },
+      "oneOf": [
+        { "$ref": "#/definitions/reference/definitions/lexical" },
+        { "$ref": "#/definitions/reference/definitions/binding" }
+      ]
+    },
+
+    /* generalized target for a bind
+      binding may target:
+        string name (binding_name),
+        an appliable (basic_lambda / basic_application),
+        a literal other than bare_literal,
+        an array of names,
+        or a generalized object where the RHS are values
+
+      it doesn't make sense / seem useful to bind to:
+        a number (distinct from a numeric string)
+        an unapplied lambda value (but is allowed anyway)
+        an array itself
+        an object itself
+
+      this may be simplified in the future, but i don't think binding to
+        literal numbers will be useful
+      */
+    "binding_target": {
+      "definitions": {
+        /* the LHS of a binding, targeted by let etc
+          */
+        "key": {
+          "anyOf": [
+            { "$ref": "#/definitions/literal" },
+            { "$ref": "#/definitions/reference" },
+            { "$ref": "#/definitions/binding_name" }
+          ]
+        },
+        /* an array target, which contains multiple actual binding targets
+          */
+        "array": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              { "$ref": "#/definitions/binding_target/definitions/key" },
+              { "$ref": "#/definitions/binding_target/definitions/array" }
+            ]
+          }
+        },
+      },
+
+      /* binding to 1 makes no sense, but (a: 1), does make sense
+        */
+      "anyOf": [
+        { "$ref": "#/definitions/binding_target/definitions/key" },
+        { "$ref": "#/definitions/binding_target/definitions/array" },
+        { "$ref": "#/definitions/basic_value/definitions/no_bare" },
+        { "$ref": "#/definitions/basic_application" },
+        { "type": "object", "additionalProperties": { "$ref": "#/definitions/basic_value" } }
+      ]
+    },
+
+    /* a value, including bare_literal
+      */
+    "basic_value": {
+      "definitions": {
+        /* a value, except for bare_literal
+          */
+        "no_bare": {
+          "anyOf": [
+            { "$ref": "#/definitions/binding_target/definitions/key" },
+            { "$ref": "#/definitions/binding_target" },
+            { "$ref": "#/definitions/basic_lambda" } # recursive
+          ]
+        },
+      },
+      "oneOf": [
+        { "$ref": "#/definitions/basic_value/definitions/no_bare" },
+        { "$ref": "#/definitions/literal/definitions/bare" }
+      ]
+    },
+
+    /* any application, which always has the form [x, y, z]
+      the empty application is legal
+
+      the first value in an application is the handler for that application,
+        regardless of whether it is a macro
+
+      the form [a, b, c] where b is an appliable value, does not apply b to c
+        (unless a applies b, of course)
+
+      if an application takes no arguments, or returns none to a context that
+        wanted some, arguments from 'behind' it are passed through
+
+      for example, if + had fixed 2-arity (it doesn't), the application
+          [print, [+, 1, 2, 3, 4]]
+        would print '3 3 4', because +'s unused arguments are not dropped on the floor
+      */
+    "basic_application": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/basic_value" },
+      "default": []
+    },
+
+    /* the basic binding form
+      */
+    "let": {
+      "definitions": {
+        /* (let: (a, b, c))
+          */
+        "array": {
+          "type": "array",
+          # describes the values of a, b, c
+          "items": { "$ref": "#/definitions/binding_target" }
+        },
+        /* (let: (a: 1, b: 2, c: 3))
+          */
+        "object": {
+          "type": "object",
+          # describes the values of a, b, c
+          "additionalProperties": { "$ref": "#/definitions/basic_value" }
+        },
+      },
+      "oneOf": [
+        { "$ref": "#/definitions/let/definitions/array" },
+        { "$ref": "#/definitions/let/definitions/object" }
+      ]
+    },
+
+    /* a value-producing FoM body
+      */
+    "in": {
+      "definitions": {
+        "basic": { "$ref": "#/definitions/basic_application" },
+        "object": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/basic_application" }
+        }
+      },
+      "anyOf": [
+        { "$ref": "#/definitions/in/definitions/basic" },
+        { "$ref": "#/definitions/in/definitions/object" },
+      ]
+    },
+
+    "in*": {
+      "type": ["array", "object"],
+      "additionalProperties": { "$ref": "#/definitions/in" }
+    },
+
+    /* bind and type-declare only the output(s) of 'in', for declarator return value
+      */
+    "as": {
+      "oneOf": [
+        { "$ref": "#/definitions/let/definitions/array" },
+        { "$ref": "#/definitions/let/definitions/object" },
+      ]
+    },
+    "as*": {
+      "type": [ "array", "object" ],
+      "items": { "$ref": "#/definitions/as" },
+      "additionalProperties": { "$ref": "#/definitions/as" }
+    },
+
+    /* bind and type-declare from any name, for declarator return value
+      */
+    "for": {
+      "type": "object",
+      "properties": {
+        "from": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/basic_value" }
+        }
+      }
+    },
+
+    "like": {
+      "type": "string",
+      "enum": ["apply", "declarator"]
+    },
+
+    "at": {
+      "type": "string",
+      "enum": ["compile", "access"]
+    },
+
+    "effect": {
+      "additionalProperties": false,
+      "required": ["input"],
+      "properties": {
+        "input": { "type": "array", "items": { "$ref": "#/definitions/basic_value" } },
+        "output": { "type": "array", "items": { "$ref": "#/definitions/basic_value" } },
+        "terminated?": { "type": "boolean", "default": false }
+      }
+    },
+
+    "basic_lambda": {
+      "type": "object",
+      "properties": {
+        "let": { "$ref": "#/definitions/let" },
+        "let*": { "$ref": "#/definitions/let" },
+        "in": { "$ref": "#/definitions/in" },
+        "in*": { "$ref": "#/definitions/in*" },
+        "as": { "$ref": "#/definitions/as" },
+        "for": { "$ref": "#/definitions/for" }
+      },
+      "additionalProperties": true,
+    },
+
+    "basic_declarator": {
+      "type": "object",
+
+      /* "additionalProperties": true {
+        "oneOf": [
+          { "$ref": "#/definitions/basic_lambda" },
+          { "$ref": "#/definitions/basic_value" },
+        ]
+      } */
+
+    },
+
+    "ports_block": {
+      "im": {
+        "type": "object",
+        "required": ["source"],
+        "properties": {
+          "source": { "$ref": "#/definitions/basic_value" },
+          "direct": { "$ref": "#/definitions/basic_value" },
+          "alias": { "$ref": "#/definitions/basic_value" },
+          "(__computed)": { "$ref": "#/definitions/(__computed)" }
+        }
+      },
+      "ex": {
+        "type": "object",
+
+      }
+    },
+
+    "ports": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "im": { "$ref": "#/definitions/ports_block/im" },
+        "ex": { "$ref": "#/definitions/ports_block/ex" }
+      }
+    }
+  },
+
+  # just to emphasise it
+  "additionalProperties": true,
+  "properties": {
+    "default_declarators": { "ref": "#" },
+
+    "ports": { "$ref": "#/definitions/ports" },
+    "constants": { "$ref": "#/definitions/basic_declarator" },
+    "macros": { "$ref": "#/definitions/basic_declarator" },
+    "funcs": { "$ref": "#/definitions/basic_declarator" },
+    "actors": { "$ref": "#/definitions/basic_declarator" }
+  }
+}

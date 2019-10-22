@@ -1,0 +1,149 @@
+{
+  "ports": {
+    "im": {
+      "builtin": {
+        "source": "__internal",
+        "direct": "*",
+        "alias": []
+      }
+    },
+    "ex": { }
+  },
+
+  "private": { },
+
+  # lit is not needed when the literal is unambiguous
+  "constants": {
+    "ZERO": 0,
+    "ONE": 1,
+  },
+
+  "macros": {
+    # the name resolution macro, which produces
+    "::": {
+      # the macro is used like an apply [x, y, z]
+      "like": "apply",
+      # run entirely at compile time to produce a compiled-in result
+      "at": "comptime",
+      # parts of the singular parameter are bound to many names
+      "let*": [
+        # *args are bound to parts as array
+        "self", {"parts": "*"}
+      ],
+      # macro body
+      "in": [
+        /* applying a string literal realizes it
+          realization failure is a compiler error
+            because this double-apply attempts to resolve a name,
+            if it does not exist, compilation must stop
+
+          this applies the builtin.join function to my name property,
+            and the 'parts' input array
+          the input to a macro is unapplied and unevaluted
+            so if the :: macro was applied to JSON strings that would usually
+            be binding invocations, those strings are made literal
+          */
+        [ "builtin::join", ["property", "self", "name"], "parts" ]
+      ],
+      # the single body value is declared to be a string and named 'ns'
+      "as": [{"ns": "string"}],
+    },
+    # the debugging macro
+    "debug": {
+      "like": "apply",
+      # evaluated on-demand
+      "at": "access",
+      /* use the single parameter as-is
+        since this is a macro, the parameter is an unapplied 'apply', or a 'quotation'
+        apply it to get its result */
+      "let": [
+        "ast",
+        {"result": ["ast"]}
+      ],
+      "in": [
+        ["::", "builtin", "print"], # using a comptime macro here
+        "ast",
+        {"lit": "is"}, # a real string
+        "result"
+      ],
+      # don't use any return value of the body
+      "as": [],
+      /* bind result to result in the object and return it
+        the 'as' scope is empty and therefore 'from' automatically uses the 'let' */
+      "for": {
+        "result": "result"
+      }
+    },
+
+    "ifte": {
+      # another apply macro
+      "like": "apply",
+      /* the arguments are spread
+        because '*' and '**' are never used, extra arguments are left alone */
+      "let*": [
+        "self", "cond_block", "then", "else",
+        {"cond": ["cond_block"]}
+      ],
+      "in": [
+        [
+          ["::", "builtin", "or"],
+          [
+            ["::", "builtin", "and"],
+            [
+              ["::", "builtin", "eq"],
+              "cond",
+              true
+            ],
+            "then"
+          ],
+          "else"
+        ]
+      ],
+      /* the single value of the body is declared to be an object
+        this could probably be inferred, but it's an example */
+     "as": [{"value": "object"}],
+      /* 'let::cond' is bound to 'cond', and the 'as' bindings are self-bound
+        this could be written as 'from': { '*': '*' }, but the type would have
+        to be inferred (which it could be in this case) */
+      "for": {
+        "from": {
+          "let": { "cond": { "cond": "boolean" } },
+          "as": {"*": "*"}
+        }
+      }
+    },
+  },
+
+  "funcs": {
+    "dup": {
+      "let": ["x"],
+      "for": { "from": { "x1": "x", "x2": "x" } }
+    },
+    "factorial": {
+      "let": [
+        "n",
+        {"n-1": [["::", "builtin", "sub"], "n", "ONE"]}
+      ],
+      "in": [
+        "ifte",
+        [["::", "builtin", "member"], {"lit": ["ONE", "ZERO"]}, "n-1"], # ONE and ZERO are not literal
+        "ONE",
+        [["::", "", "mul"], "n", [{"$lex": {"lit": "__FUNC__"}}, "n-1"]]
+      ],
+      "as": ["x"]
+    }
+  },
+
+  "actors": {
+    "main": {
+      "let": ["a", "b", "c"],
+      "in*": [
+        ["cleave", ["factorial", 5], "debug", {"lit": ["comptime", "debug"]}],
+        ["*", ["2ary-add", "a", "b", "c"]]
+      ],
+      # in* has 2 values, and as binds the 1st to nothing and the 2nd to exit_code
+      # a name known by main's caller, start (not CRT _start)
+      "as": ["", "exit_code"]
+    }
+  }
+}

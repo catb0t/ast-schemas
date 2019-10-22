@@ -1,0 +1,15 @@
+"known_boolean": {
+  "$comment": "optional optimization possibility: if a value that would normally be a complex expression (or even just invocation of the true/false/null variables/object members) can be shown to have a given boolean state at compile time, that can be built into the AST as a constant boolean. this does break reassigning the entire value of the true/false/null variable, but it's not like that was important.",
+  "type": "object",
+  "required": ["_known_boolean"],
+  "properties": {
+    "_known_boolean": { "const": true },
+    "_state": { "type": "boolean" },
+    "_reason": {
+      "oneOf": [
+        { "type": ["boolean", "null"], "enum": [ true, false, null ] },
+        { "$ref": "#/definitions/expression" }
+      ]
+    }
+  }
+},

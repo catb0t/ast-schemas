@@ -1,0 +1,379 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "brat-base",
+  "title": "Brat syntax description, by Cat Stevens",
+  "description": "describing the current syntax of the Brat language reference implementation https://github.com/presidentbeef/brat",
+
+  "definitions": {
+    "comment": {
+      "$comment": "a node which is intended for humans to read, not part of the language semantics. technically this contains an extension not present in the reference implementation (where comments are not simply ignored, and could be retrieved by the program itself), but is backwards compatible with the reference implementation, so it's cool to have it anyway. also, it makes it a lot easier to disable Brat nodes in the JSON representation, by just adding '_comment': true.",
+
+      "definitions": {
+        "single": {
+          "$comment": "either a simple string or an ordered grouping of values which convey information to a reader/user; the values may be strings, which will be literal text, or any other JSON value or object, which serve to enrich the comment",
+
+          "type": ["array", "string"]
+        },
+        "multi": {
+          "$comment": "each immediate child array is one line of a multi-line comment; the lines themselves are just like single-line comments",
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": { "$ref": "#/definitions/comment/definitions/single" }
+          }
+        }
+      },
+
+      "type": "object",
+
+      "required": ["_comment"],
+
+      "properties": {
+        "_comment": { "const": true },
+        "_value": { "oneOf": [
+            { "$ref": "#/definitions/comment/definitions/single" },
+            { "$ref": "#/definitions/comment/definitions/multi" }
+        ] },
+        "_comment_value": { "oneOf": [
+            { "$ref": "#/definitions/comment/definitions/single" },
+            { "$ref": "#/definitions/comment/definitions/multi" }
+        ] },
+        "_extends_to_eof": { "type": "boolean", "default": false }
+      }
+    },
+
+    "literal": {
+      "$comment": "Brat has 7 basic literal constructions: number, string, symbol, regex, array, hash, and function, the last of which is declared in `function`. array and hash are compound types containing other nodes, represented by JSON arrays and objects respectively. number is represented by a primitive JSON number. a symbol is a string written :like_this, only containing contiguous word characters; a string is any non-symbol string. finally, a regex is either a simple pattern string, or an object containing the pattern string and string of flags.",
+
+      "definitions": {
+        "bare": {
+          "$comment": "these are the only Brat literals with direct representations in JSON. booleans and null are methods on the global `object` object.",
+          "type": ["number", "string", "array", "object"]
+        },
+        "number": {
+          "$comment": "an integer or floating point JSON number. Brat does not currently specify or implement rationals or complex / other multi-dimensional types as primitives."
+          "not": { "properties": { "_value": { "type": "string" } } },
+          "properties": {
+            "_value": { "type": "number" },
+            "_kind": { "const": false }
+          }
+        },
+        "string": {
+          "$comment": "a string of arbitrary characters which cannot be written as a symbol, containing only contiguous word characters",
+          "properties": {
+            "_value": { "type": "string", "pattern": "\\W" },
+            "_kind": { "const": false }
+          }
+        },
+        "symbol": {
+          "$comment": "a subset of strings that contain only contiguous word characters. it is an error to not specify a symbol-like string as a symbol.",
+          "properties": {
+            "_value": { "type": "string", "pattern": "^\\w+$" },
+            "_kind": { "const": "_symbol" }
+          }
+        },
+        "regex": {
+          "$comment": "",
+          "definitions": {
+            "simple": {
+              "type": "string", "format": "regex"
+            },
+            "flagged": {
+              "definitions": {
+                "string": { "type": "string", "pattern": "^[a-zA-Z]+$" },
+                "array": {
+                  "type": "array",
+                  "items": { "$ref": "#/definitions/literal/definitions/regex/definitions/flagged/definitions/string" }
+                }
+              },
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["_pattern", "_flags"],
+              "properties": {
+                "_pattern": { "$ref": "#/definitions/literal/definitions/regex/definitions/simple" },
+                "_flags": {
+                  "oneOf": [
+                    { "$ref": "#/definitions/literal/definitions/regex/definitions/flagged/definitions/string" },
+                    { "$ref": "#/definitions/literal/definitions/regex/definitions/flagged/definitions/array" }
+                  ]
+                }
+              }
+            }
+          },
+          "not": {
+            "properties": { "_kind": { "enum": [false, "_symbol"] } }
+          },
+          "properties": {
+            "_value": {
+              "type": ["string", "object"],
+              "oneOf": [
+                { "$ref": "#/definitions/literal/definitions/regex/definitions/simple" },
+                { "$ref": "#/definitions/literal/definitions/regex/definitions/flagged" }
+              ]
+            },
+            "_kind": { "const": "_regex" }
+          }
+        },
+        "compound": {
+          "definitions": {
+            "deep": {
+              "oneOf": [
+                {
+                  "properties": {
+                    "_kind": { "const": "_deep_hash" },
+                    "_value": {
+                      "type": "object",
+                      "additionalProperties": { "$ref": "#/definitions/literal/definitions/bare" }
+                    }
+                  }
+                },
+                {
+                  "properties": {
+                    "_kind": { "const": "_deep_array" },
+                    "_value": {
+                      "type": "array",
+                      "items": { "$ref": "#/definitions/literal/definitions/bare" }
+                    }
+                  }
+                }
+              ]
+            },
+            "basic": {
+              "oneOf": [
+                {
+                  "properties": {
+                    "_kind": { "const": "_hash" },
+                    "_value": {
+                      "type": "object",
+                      "additionalProperties": { "$ref": "#/definitions/node" }
+                    }
+                  }
+                },
+                {
+                  "properties": {
+                    "_kind": { "const": false },
+                    "_value": {
+                      "type": "array",
+                      "items": { "$ref": "#/definitions/node" }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "properties": {
+            "_kind": { "enum": ["_hash", "_deep_hash", "_deep_array", false] },
+            "_value": { "type": ["array", "object"] }
+          },
+          "oneOf": [
+            { "$ref": "#/definitions/literal/definitions/compound/definitions/deep" },
+            { "$ref": "#/definitions/literal/definitions/compound/definitions/basic" }
+          ]
+        }
+      },
+
+      "additionalProperties": false,
+      "required": ["_literal", "_value"],
+
+      "properties": {
+        "_literal": { "const": true },
+        "_value": { "type": [ "number", "string", "array", "object" ] },
+        "_kind": {
+          "type": ["boolean", "string"],
+          "default": false,
+          "enum": [ false, "_symbol", "_regex", "_hash", "_deep_hash", "_deep_array" ]
+        }
+      },
+
+      "oneOf": [
+        { "$ref": "#/definitions/literal/definitions/number" },
+        { "$ref": "#/definitions/literal/definitions/symbol" },
+        { "$ref": "#/definitions/literal/definitions/string" },
+        { "$ref": "#/definitions/literal/definitions/regex" },
+        { "$ref": "#/definitions/literal/definitions/compound" }
+      ]
+    },
+
+    "var_by_name": {
+      "$comment": "a bare variable name; mainline Brat does not have the ability to use an arbitrary expression to compute bare names (that's what hashes and language extensions are for)",
+
+      "definitions": {
+        "name": { "type": "string", "pattern": "^[a-zA-Z][a-zA-Z0-9_!?\\-*+^&@~/\\><$%]*$" }
+      },
+
+      "type": "object",
+      "required": ["_var_by_name", "_name"],
+      "additionalProperties": false,
+      "properties": {
+        "_var_by_name": { "const": true },
+        "_name": { "$ref": "#/definitions/var_by_name/definitions/name" }
+      }
+    },
+
+    "member_access": {
+      "$comment": "an expression of the form `a.b`, `<op>a`, `a<op>`, or `a <op> b` (the last 3 of which are equivalent to a function_application where `b.op` is the function to apply), where `a` is any object _target (including another _member_access), and `b` is a literal bare member name _member. this is also called a method call or method invocation. as far as i'm concerned, the name of the member cannot be the result of an arbitrary computed value in mainline Brat, and the target cannot be a function, but an extension for those belong in a different schema",
+
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "_member_access": { "const": true },
+        "_target": { "$ref": "#/definitions/brat_object" },
+        "_member": { "$ref": "#/definitions/var_by_name" }
+      }
+    },
+
+    "assignment_target": {
+      "$comment": "literally, what objects may appear on the LHS of an assignment operator. AFAIK this is only variables and the result of any member access or any indexing operation; the impression I get from the spec is that *not* any value can be assigned to; `[1] = 2` does not work in the reference impl. but `[1][0] = 2` works as expected.",
+
+      "oneOf": [
+        { "$ref": "#/definitions/var_by_name" },
+        { "$ref": "#/definitions/index" },
+        { "$ref": "#/definitions/member_access" }
+      ]
+    },
+
+    "brat_object": {
+      "$comment": "anything that isn't a comment or a function. specifically, it's either a literal, a simple variable name 'a', or a member access on a variable, like 'a.true?'. in the Lua reference implementation, a function is *not* an object that implements a 'call' method or something, they are completely distinct. making functions objects is out of scope for this schema, but is a good idea for a Brat extension. not to be confused with the normal JSON 'object', or the type named 'object' known to JSON schema",
+
+      "oneOf": [
+        { "$ref": "#/definitions/literal" },
+        { "$ref": "#/definitions/assignment_target" }
+      ]
+    },
+
+    "function": {
+      "$comment": "the literal expression which creates a callable value. a function is an array of nodes, just like the top-level program schema, except the function has different scoping rules.",
+
+      "type": "object",
+      "required": ["_function"],
+      "additionalProperties": false,
+
+      "properties": {
+        "_does": { "$ref": "#" },
+        "_args": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "_required": {
+              "$comment": "positional required argument list when calling the function. these names become in scope in the _does node-array, and get the values with which the function was invoked",
+              "type": "array",
+              "items": { "$ref": "#/definitions/var_by_name/definitions/name" }
+            },
+            "_default": {
+              "$comment": "ordered associative array of names of default parameters with their default values, which, as far as i'm concerned, can be any expression. allowing any node would allow comment nodes as default values, which would be a cool extension, but is not actually in the reference implementation",
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": [
+                  { "$ref": "#/definitions/var_by_name/definitions/name" },
+                  { "$ref": "#/definitions/expression" }
+                ]
+              }
+            },
+            "_extra": {
+              "$comment": "the name of the *variable_length_args argument which collects all trailing function arguments after all required and default argument positions, into an array. calling this part 'var args' or 'array', 'slurpy' etc might get confusing",
+              "$ref": "#/definitions/var_by_name"
+            }
+          }
+        }
+      }
+    },
+
+    "value_of": {
+      "$comment": "the 'don't do that' builtin prefix operator, usually spelled `->`, also referred to as the 'value of' operator, but either _value_of or _dont_do_that are allowed.",
+
+      "definitions": {
+        "value_of": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "_value_of": { "const": true },
+            "_target": { "$ref": "#/definitions/expression" }
+          }
+        },
+        "dont_do_that": {
+          "type": "object",
+          "additionalProperties": false,
+
+          "properties": {
+            "_dont_do_that": { "const": true },
+            "_target": { "$ref": "#/definitions/expression" }
+          }
+        }
+      },
+
+      "oneOf": [
+        { "$ref": "#/definitions/value_of/definitions/value_of" },
+        { "$ref": "#/definitions/value_of/definitions/dont_do_that"}
+      ]
+    },
+
+    "assignment": {
+      "$comment": "the assignment builtin operator. the LHS has to be something that can be assigned to, and the RHS can be any value, including another assignment.",
+
+      "type": "object",
+      "required": ["_assignment", "_lhs", "_rhs"],
+      "properties": {
+        "_assignment": { "const": true },
+        "_lhs": { "$ref": "#/definitions/assignment_target" },
+        "_rhs": { "$ref": "#/definitions/expression" }
+      }
+    },
+
+    "function_application": {
+      "$comment": "any expression of the form a(b, c, d: x), where a is something to invoke with the arguments, and d will be a key in a hash of 'keyword' like arguments that will be given as the last formal parameter. note that a.b is a `member_access`, but a.b(c) is a function_application of the member_access `a.b` to the `_positional_args` c.",
+      "type": "object",
+      "required": ["_function_application", "_function"],
+      "additionalProperties": false,
+      "properties": {
+        "_function_application": { "const": true },
+        "_function": { "$ref": "#/definitions/expression" },
+        "_positional_args": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/expression" }
+        },
+        "_hash_args": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/expression" }
+        }
+      }
+    },
+
+    "index": {
+      "$comment": "index access on an array or hash value, like `x[y]` or `[1][0]` or `[a: 1][:a]`. note that i consider x[] to be a legal empty index / slice, but maybe that should also be a separate extension.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["_index"],
+      "properties": {
+        "_index": { "const": true },
+        "_target": { "$ref": "#/definitions/expression" },
+        "_indices": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/expression" }
+        }
+      }
+    },
+
+    "expression": {
+      "not": { "$ref": "#/definitions/comment" },
+      "oneOf": [
+        { "$ref": "#/definitions/brat_object" },
+        { "$ref": "#/definitions/function" },
+        { "$ref": "#/definitions/value_of" },
+        { "$ref": "#/definitions/assignment" },
+        { "$ref": "#/definitions/function_application" },
+        { "$ref": "#/definitions/index" }
+      ]
+    },
+
+    "node": {
+      "oneOf": [
+        { "$ref": "#/definitions/comment" },
+        { "$ref": "#/definitions/expression" }
+      ]
+    }
+  },
+
+  "type": "array",
+  "items": { "$ref": "#/definitions/node" }
+}

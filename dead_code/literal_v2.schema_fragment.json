@@ -1,0 +1,152 @@
+"literal": {
+  "$comment": "a primitive literal value except a function: either an array, a number, a string, a symbol, (special case of string), or an object representing a literal hashtable. NOTE that this declaration only applies one level deep without `_deep: true`, so that variables may be named inside arrays and hashes. `function` technically could appear under this declaration, but it would add complexity while not providing any more functionality than making it separate.",
+
+  "definitions": {
+    "bare": {
+      "$comment": "JSON literals that overlap with Brat primitives. I've decided to allow the JSON primitive objects null, true, and false being used as bare literals to represent the Brat objects, true, false, and null",
+      "type": ["number", "string", "array", "object", "boolean", "null"]
+    },
+
+    "number": {
+      "$comment": "any number literal, currently Brat and JSON number types are pretty much compatible, but if Brat ever gets native complex numbers, this will not work. currently complex numbers are either implemented as a library or should be an extension.",
+
+      "test_for": { "properties": { "_value": { "type": "number" } } },
+
+      "properties": {
+        "_hash": { "const": false },
+        "_regex": { "const": false },
+        "_deep": { "const": false }
+      }
+    },
+
+    "string": {
+      "$comment": "any other AST string literal that isn't a symbol. currently disallows 'quoted strings' that could be a :symbol_like_this",
+      "test_for": { "properties": { "_symbol": { "const": false }, "_value": { "type": "string", "pattern": "\\W" } } },
+
+      "properties": {
+        "_value": { "pattern": "\\W" },
+        "_symbol": { "const": false },
+        "_hash": { "const": false },
+        "_regex": { "const": false },
+        "_deep": { "const": false }
+      }
+    },
+
+    "symbol": {
+      "$comment": "a string written like :symbol_x. it can only contain word characters and underscore, but is actually an (immutable) string",
+      "test_for": { "properties": { "_symbol": { "const": true }, "_value": { "type": "string", "pattern": "^\\w+$" } } },
+
+      "properties": {
+        "_value": { "type": "string", "pattern": "^\\w+$" },
+        "_symbol": { "const": true },
+        "_hash": { "const": false },
+        "_regex": { "const": false },
+        "_deep": { "const": false }
+      }
+    },
+
+    "regex": {
+      "$comment": "first-class regex, usually written between / / delimiters, and can have flags/modifiers",
+
+      "test_for": { "properties": { "_regex": { "const": true }, "_symbol": { "const": false } } },
+
+      "definitions": {
+        "simple": { "type": "string", "format": "regex" },
+        "flagged": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["_pattern", "_flags"],
+          "properties": {
+            "_pattern": { "$ref": "#/definitions/literal/definitions/regex/definitions/simple" },
+            "_flags": { "type": "string", "pattern": "^[a-zA-Z]+$" }
+          }
+        }
+      },
+
+      "properties": {
+        "_value": {
+          "oneOf": [
+            { "$ref": "#/definitions/literal/definitions/regex/definitions/simple" },
+            { "$ref": "#/definitions/literal/definitions/regex/definitions/flagged" }
+          ]
+        },
+        "_regex": { "const": true },
+        "_hash": { "const": false },
+        "_symbol": { "const": false },
+        "_deep": { "const": false }
+      }
+    },
+
+    "compound": {
+      "$comment": "a compound literal, either an array or a hash table, which might be a deep literal, and only consists of other literals if deep",
+
+      "test_for": { "properties": { "_deep": { "const": false } } },
+
+      "definitions": {
+        "deep": {
+          "$comment": "a deep literal value, that should be applied to the properties._value key",
+          "test_for": { "properties": { "_deep": { "const": true } } },
+          "oneOf": [
+            { "type": "array", "items": { "$ref": "#/definitions/literal/definitions/bare" } },
+            { "type": "object", "additionalProperties": { "$ref": "#/definitions/literal/definitions/bare" } }
+          ],
+          "if": { "properties": { "_value": { "type": "object" } } },
+          "then": { "properties": { "_hash": { "const": true } } },
+          "else": false
+        }
+      },
+      "properties": {
+        "_value": {
+          "oneOf": [
+            { "type": "array", "items": { "$ref": "#/definitions/node" } },
+            { "type": "object", "additionalProperties": { "$ref": "#/definitions/node" } }
+          ]
+        },
+        "_regex": { "const": false },
+        "_symbol": { "const": false },
+        "_deep": { "const": false }
+      },
+      "if": { "properties": { "_value": { "type": "object" } } },
+      "then": { "properties": { "_hash": { "const": true } } },
+      "else": false
+    }
+  },
+
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["_literal", "_value"],
+
+  "properties": {
+    "_literal": { "const": true },
+    "_value": { "type": ["array", "string", "number", "object"] },
+    "_deep": { "type": "boolean", "default": false },
+
+    "_symbol": { "type": "boolean", "default": false },
+    "_hash": { "type": "boolean", "default": false },
+    "_regex": { "type": "boolean", "default": false }
+  },
+
+  "if": { "$ref": "#/definitions/literal/definitions/regex/test_for" },
+  "then": { "$ref": "#/definitions/literal/definitions/regex" },
+  "else": {
+    "if": { "$ref": "#/definitions/literal/definitions/compound/definitions/deep/test_for" },
+    "then": { "$ref": "#/definitions/literal/definitions/compound/definitions/deep" },
+    "else": {
+      "if": { "$ref": "#/definitions/literal/definitions/compound/test_for" },
+      "then": { "$ref": "#/definitions/literal/definitions/compound" },
+      "else": {
+        "if": { "$ref": "#/definitions/literal/definitions/number/test_for" },
+        "then": { "$ref": "#/definitions/literal/definitions/number" },
+        "else": {
+          "if": { "$ref": "#/definitions/literal/definitions/symbol/test_for" },
+          "then": { "$ref": "#/definitions/literal/definitions/symbol" },
+          "else": {
+            "if": { "$ref": "#/definitions/literal/definitions/string/test_for" },
+            "then": { "$ref": "#/definitions/literal/definitions/string" },
+            "else": false
+          }
+        }
+      }
+    }
+  }
+}
