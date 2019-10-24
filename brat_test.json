@@ -15,7 +15,7 @@
   { "_literal": true, "_value": { "_pattern": "a regex", "_flags": ["im"] }, "_kind": "_regex" },
   { "_literal": true, "_value": { "_pattern": "a regex", "_flags": ["i", "m"] }, "_kind": "_regex" },
 
-  { "_comment": true, "_value": "" },
+  { "_comment": true, "_value": "compound literals" },
   { "_literal": true, "_value": [1] },
   { "_literal": true, "_value": [ { "_literal": true, "_value": "a string" } ] },
   { "_literal": true, "_value": [ {"_var_by_name": true, "_name": "x"} ] },
@@ -26,13 +26,16 @@
   { "_literal": true, "_value": { "a": 1}, "_kind": "_deep_hash" },
   { "_literal": true, "_value": { "a": "a"}, "_kind": "_deep_hash" },
 
-  { "_comment": true, "_literal": true, "_value": "invoke a variable by name, this one does not exist yet (and would be an error when processing scopes for this AST)" },
+  { "_comment": true, "_value": [
+    ["invoke a variable by name"],
+    ["this one does not exist yet (and would be an error when processing scopes for this AST)"]
+  ] },
   { "_var_by_name": true, "_name": "x" },
 
   { "_comment": true, "_literal": true, "_value": "assign a value to x, creating it in this scope" },
   { "_assignment": true,
-    "_lhs": { "_var_by_name": true, "_name": "x" },
-    "_rhs": { "_literal": true, "_value": "Hello, World!" }
+    "_target": { "_var_by_name": true, "_name": "x" },
+    "_source": { "_literal": true, "_value": "Hello, World!" }
   },
 
   { "_comment": true, "_literal": true, "_value": "apply the pre-defined p function to x" },
@@ -44,7 +47,77 @@
   { "_comment": true, "_value": [
     [ "hello line ", 1, "i am the", true, "first line of this", {"kind": "comment"} ],
     [ "i am line", 2 ]
-  ] }
+  ] },
 
+  { "_comment": true, "_value": "this variable name doesn't start with a letter and is in error"},
+  { "_var_by_name": true, "_name": "_a" },
 
+  { "_member_access": true,
+    "_target": { "_var_by_name": true, "_name": "object" },
+    "_member": { "_var_by_name": true, "_name": "null?" }
+  },
+
+  { "_comment": true, "_value": "assignment to member name/access" },
+  { "_assignment": true,
+    "_target": {
+      "_member_access": true,
+      "_target": { "_var_by_name": true, "_name": "object" },
+      "_member": { "_var_by_name": true, "_name": "my_new_property" }
+    },
+    "_source": { "_literal": true, "_value": "my new value" }
+  },
+
+  { "_comment": true, "_value": [
+    [ "in general, assignment to a literal is illegal and nonsensical" ],
+    [ "except when the literal is an indexing expression (upon any object), which is legal and makes sense" ]
+  ] },
+  { "_assignment": true,
+    "_target": {
+      "_index": true,
+      "_target": { "_literal": true, "_value": [2] },
+      "_indices": [ {"_literal": true, "_value": 0} ]
+    },
+    "_source": { "_literal": true, "_value": 1 }
+  },
+
+  { "_comment": true, "_value": "effectless function literal for fun" },
+  { "_function": true,
+    "_does": [
+      { "_comment": true, "_value": "this comment is the first node of this function body" },
+      { "_literal": true, "_value": 54329 }
+    ]
+  },
+
+  { "_comment": true, "_value": "store a function in a variable" },
+  { "_assignment": true,
+    "_target": { "_var_by_name": true, "_name": "x_func" },
+    "_source": {
+      "_function": true,
+      "_args": { "_required": [ "y" ] },
+      "_does": [
+        { "_comment": true, "_value": "apply a mathematical operator to the argument" },
+        { "_function_application": true,
+          "_function": {
+            "_member_access": true,
+            "_target": { "_var_by_name": true, "_name": "y" },
+            "_member": { "_var_by_name": true, "_name": "*" }
+          },
+          "_positional_args": [ { "_literal": true, "_value": 5 } ]
+        }
+      ]
+    }
+  },
+
+  { "_comment": true, "_value": "call p(x_func(6.22)) -> 31.1" },
+  { "_function_application": true,
+    "_function": { "_var_by_name": true, "_name": "p" },
+    "_positional_args": [
+      { "_function_application": true,
+        "_function": { "_var_by_name": true, "_name": "x_func" },
+        "_positional_args": [ { "_literal": true, "_value": 6.22 } ]
+      }
+    ]
+  },
+
+  { "_comment": true, "_value": "finally: combine all the constructs in one expression" }
 ]

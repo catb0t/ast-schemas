@@ -219,7 +219,10 @@
       "properties": {
         "_member_access": { "const": true },
         "_target": { "$ref": "#/definitions/brat_object" },
-        "_member": { "$ref": "#/definitions/var_by_name" }
+        "_member": {
+          "$comment": "somewhat surprisingly, this is consistent with the implementation and spec. even object members must start with a letter and must abide the rules of normal variable names.",
+          "$ref": "#/definitions/var_by_name"
+        }
       }
     },
 
@@ -310,14 +313,14 @@
     },
 
     "assignment": {
-      "$comment": "the assignment builtin operator. the LHS has to be something that can be assigned to, and the RHS can be any value, including another assignment.",
+      "$comment": "the assignment builtin operator. the LHS has to be something that can be assigned to, and the RHS can be any value, including another assignment. _target and _source used to be called _lhs and _rhs, respectively, as in the = operator, but i hoped target/source is more consistent (see member_access) and self-explanatory",
 
       "type": "object",
-      "required": ["_assignment", "_lhs", "_rhs"],
+      "required": ["_assignment", "_target", "_source"],
       "properties": {
         "_assignment": { "const": true },
-        "_lhs": { "$ref": "#/definitions/assignment_target" },
-        "_rhs": { "$ref": "#/definitions/expression" }
+        "_target": { "$ref": "#/definitions/assignment_target" },
+        "_source": { "$ref": "#/definitions/expression" }
       }
     },
 
@@ -341,7 +344,7 @@
     },
 
     "index": {
-      "$comment": "index access on an array or hash value, like `x[y]` or `[1][0]` or `[a: 1][:a]`. note that i consider x[] to be a legal empty index / slice, but maybe that should also be a separate extension.",
+      "$comment": "index access on an array or hash value, like `x[y]` or `[1][0]` or `[a: 1][:a]` or `[...][a, b, c]`. x[] as an empty index / slice, is an unimplemented extension.",
       "type": "object",
       "additionalProperties": false,
       "required": ["_index"],
@@ -350,6 +353,7 @@
         "_target": { "$ref": "#/definitions/expression" },
         "_indices": {
           "type": "array",
+          "minItems": 1,
           "items": { "$ref": "#/definitions/expression" }
         }
       }
