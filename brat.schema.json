@@ -363,7 +363,7 @@
     },
 
     "member_access": {
-      "$comment": "an expression of the form `a.b`, `<op>a`, `a<op>`, or `a <op> b` (the last 3 of which are equivalent to a `application` where `b.op` is the function to apply), where `a` is any object _target (including another _member_access), and `b` is a literal bare member name _member. this is also called a method call or method invocation. a bug in the implementation means that `{ object }().true` does not work, but that isn't mimicked here. as far as i'm concerned, the name of the member cannot be the result of an arbitrary computed value in mainline Brat, and the target cannot be a function, but an extension for those belong in a different schema",
+      "$comment": "an expression of the form `a.b`, `<op>a`, `a<op>`, or `a <op> b` (the last 3 of which are equivalent to a `application` where `b.op` is the function to apply), where `a` is any object _target (including another _member_access), and `b` is a literal bare member name _member. this is also called a method call or method invocation. `({ object }()).true` works in LuaBrat with the enclosing parens. as far as i'm concerned, the name of the member cannot be the result of an arbitrary computed value in mainline Brat, and the target cannot be a function, but an extension for those belong in a different schema",
 
       "type": "object",
       "required": ["_member_access"],

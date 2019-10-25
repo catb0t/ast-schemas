@@ -158,9 +158,8 @@
 
   { "_comment": true, "_multi": true, "_note": [
     "member access on an immediate function application",
-    "doesn't work properly in LuaBrat but obviously should",
-    "this example says `{ object }().true`",
-    "`{ [1] }()[0]` does work properly, but `{ [1] }()[0].true` also doesn't"
+    "this example says `({ object }()).true`",
+    "similar to `{ [1] }()[0]` does work properly, but `({ [1] }()[0]).true` requires the enclosing parentheses"
   ] },
   { "_member_access": true,
     "_target": {
@@ -173,7 +172,7 @@
     "_member": "true"
   },
 
-  { "_comment": true, "_note": "`{ [1] }()[0].true` also doesn't work properly in LuaBrat but there's no reason it shouldn't" },
+  { "_comment": true, "_note": "`({ [1] }()[0]).true` also works, only with enclosing parens" },
   { "_member_access": true,
     "_target": {
       "_index": true,
@@ -202,7 +201,7 @@
 
   { "_comment": true, "_multi": true, "_note": [
     "the code `a = {}; [->a: 1][->a]` works and returns 1",
-    "perhaps unintentionally, so we ensure it works here too",
+    "perhaps unintentionally, so we ensure it works here too, because it's cool and good",
     "the obvious best way to allow arbitrary non-string expression temporaries in the position of a hash key",
     "is to represent the hash as an associative array and turn it into a hash at compile time",
     "the other option is to use UUID keys and make the actual key a member of a special subobject"
