@@ -1,9 +1,9 @@
 [
-  { "_comment": true, "_value": "a simple comment" },
+  { "_comment": true, "_note": "a simple comment" },
 
   { "_literal": true, "_value": 1 },
   { "_literal": true, "_value": "not symbolifiable" },
-  { "_comment": true, "_comment_value": "will fail",
+  { "_comment": true, "_note": "will fail",
     "_literal": true, "_value": "not symbolifiable", "_kind": "_symbol" },
 
   { "_literal": true, "_value": "is_symbolifiable", "_kind": "_symbol" },
@@ -15,49 +15,49 @@
   { "_literal": true, "_value": { "_pattern": "a regex", "_flags": ["im"] }, "_kind": "_regex" },
   { "_literal": true, "_value": { "_pattern": "a regex", "_flags": ["i", "m"] }, "_kind": "_regex" },
 
-  { "_comment": true, "_value": "compound literals" },
-  { "_literal": true, "_value": [1] },
+  { "_comment": true, "_note": "compound literals" },
   { "_literal": true, "_value": [ { "_literal": true, "_value": "a string" } ] },
   { "_literal": true, "_value": [ {"_var_by_name": true, "_name": "x"} ] },
-  { "_literal": true, "_value": { "a": 1}, "_kind": "_hash" },
+  { "_literal": true, "_value": { "a": { "_literal": true, "_value": 1 } }, "_kind": "_hash" },
+  { "_literal": true, "_value": { "a": 1}, "_kind": "_deep_hash" },
   { "_literal": true, "_value": { "a": { "_var_by_name": true, "_name": "x" } }, "_kind": "_hash" },
   { "_literal": true, "_value": [ [1] ], "_kind": "_deep_array" },
   { "_literal": true, "_value": [ "a" ], "_kind": "_deep_array" },
   { "_literal": true, "_value": { "a": 1}, "_kind": "_deep_hash" },
   { "_literal": true, "_value": { "a": "a"}, "_kind": "_deep_hash" },
 
-  { "_comment": true, "_value": [
+  { "_comment": true, "_multi": true, "_note": [
     ["invoke a variable by name"],
     ["this one does not exist yet (and would be an error when processing scopes for this AST)"]
   ] },
   { "_var_by_name": true, "_name": "x" },
 
-  { "_comment": true, "_literal": true, "_value": "assign a value to x, creating it in this scope" },
+  { "_comment": true, "_literal": true, "_note": "assign a value to x, creating it in this scope" },
   { "_assignment": true,
     "_target": { "_var_by_name": true, "_name": "x" },
     "_source": { "_literal": true, "_value": "Hello, World!" }
   },
 
-  { "_comment": true, "_literal": true, "_value": "apply the pre-defined p function to x" },
-  { "_function_application": true,
-    "_function": { "_var_by_name": true, "_name": "p" },
-    "_positional_args": [{ "_var_by_name": true, "_name": "x" }]
+  { "_comment": true, "_literal": true, "_note": "apply the pre-defined p function to x" },
+  { "_application": true,
+    "_target": { "_var_by_name": true, "_name": "p" },
+    "_positional_args": [ { "_var_by_name": true, "_name": "x" } ]
   },
 
-  { "_comment": true, "_value": [
+  { "_comment": true, "_multi": true, "_note": [
     [ "hello line ", 1, "i am the", true, "first line of this", {"kind": "comment"} ],
     [ "i am line", 2 ]
   ] },
 
-  { "_comment": true, "_value": "this variable name doesn't start with a letter and is in error"},
-  { "_var_by_name": true, "_name": "_a" },
+  { "_comment": true, "_note": "this variable name doesn't start with a letter and is in error"},
+  { "_comment": true, "_var_by_name": true, "_name": "_a" },
 
   { "_member_access": true,
     "_target": { "_var_by_name": true, "_name": "object" },
     "_member": { "_var_by_name": true, "_name": "null?" }
   },
 
-  { "_comment": true, "_value": "assignment to member name/access" },
+  { "_comment": true, "_note": "assignment to member name/access" },
   { "_assignment": true,
     "_target": {
       "_member_access": true,
@@ -67,40 +67,40 @@
     "_source": { "_literal": true, "_value": "my new value" }
   },
 
-  { "_comment": true, "_value": [
+  { "_comment": true, "_note": [
     [ "in general, assignment to a literal is illegal and nonsensical" ],
     [ "except when the literal is an indexing expression (upon any object), which is legal and makes sense" ]
   ] },
   { "_assignment": true,
     "_target": {
       "_index": true,
-      "_target": { "_literal": true, "_value": [2] },
+      "_target": { "_literal": true, "_value": [2], "_kind": "_deep_array" },
       "_indices": [ {"_literal": true, "_value": 0} ]
     },
     "_source": { "_literal": true, "_value": 1 }
   },
 
-  { "_comment": true, "_value": "effectless function literal for fun" },
+  { "_comment": true, "_note": "effectless function literal for fun" },
   { "_function": true,
     "_does": [
-      { "_comment": true, "_value": "this comment is the first node of this function body" },
+      { "_comment": true, "_note": "this comment is the first node of this function body" },
       { "_literal": true, "_value": 54329 }
     ]
   },
 
-  { "_comment": true, "_value": "store a function in a variable" },
+  { "_comment": true, "_note": "store a function in a variable" },
   { "_assignment": true,
     "_target": { "_var_by_name": true, "_name": "x_func" },
     "_source": {
       "_function": true,
       "_args": { "_required": [ "y" ] },
       "_does": [
-        { "_comment": true, "_value": "apply a mathematical operator to the argument" },
-        { "_function_application": true,
-          "_function": {
+        { "_comment": true, "_note": "apply a mathematical operator to the argument" },
+        { "_application": true,
+          "_target": {
             "_member_access": true,
             "_target": { "_var_by_name": true, "_name": "y" },
-            "_member": { "_var_by_name": true, "_name": "*" }
+            "_member": "*"
           },
           "_positional_args": [ { "_literal": true, "_value": 5 } ]
         }
@@ -108,16 +108,138 @@
     }
   },
 
-  { "_comment": true, "_value": "call p(x_func(6.22)) -> 31.1" },
-  { "_function_application": true,
-    "_function": { "_var_by_name": true, "_name": "p" },
+  { "_comment": true, "_note": "call p(x_func(6.22)) -> 31.1" },
+  { "_application": true,
+    "_target": { "_var_by_name": true, "_name": "p" },
     "_positional_args": [
-      { "_function_application": true,
-        "_function": { "_var_by_name": true, "_name": "x_func" },
+      { "_application": true,
+        "_target": { "_var_by_name": true, "_name": "x_func" },
         "_positional_args": [ { "_literal": true, "_value": 6.22 } ]
       }
     ]
   },
 
-  { "_comment": true, "_value": "finally: combine all the constructs in one expression" }
+  { "_comment": true, "_note": "first-class function for value_of test" },
+  { "_assignment": true,
+    "_target": { "_var_by_name": true, "_name": "call_with_10" },
+    "_source": { "_function": true,
+      "_args": { "_required": [ "func" ] },
+      "_does": [
+        { "_application": true,
+          "_target": { "_var_by_name": true, "_name": "func" },
+          "_positional_args": [ { "_literal": true, "_value": 10 } ]
+        }
+      ]
+    }
+  },
+
+  { "_comment": true, "_note": "call p(call_with_10(x_func)) -> 50" },
+  { "_application": true,
+    "_target": { "_var_by_name": true, "_name": "p" },
+    "_positional_args": [
+      { "_application": true,
+        "_target": { "_var_by_name": true, "_name": "call_with_10" },
+        "_positional_args": [
+          { "_value_of": true, "_target": { "_var_by_name": true, "_name": "x_func" } }
+        ]
+      }
+  ] },
+
+  { "_comment": true, "_note": "some odder things that should work follow" },
+
+  { "_comment": true, "_note": "assign the result of an assignment" },
+  { "_assignment": true,
+    "_target": { "_var_by_name": true, "_name": "a" },
+    "_source": { "_assignment": true,
+      "_target": { "_var_by_name": true, "_name": "b" },
+      "_source": { "_literal": true, "_value": 1 }
+    }
+  },
+
+  { "_comment": true, "_multi": true, "_note": [
+    "member access on an immediate function application",
+    "doesn't work properly in LuaBrat but obviously should",
+    "this example says `{ object }().true`",
+    "`{ [1] }()[0]` does work properly, but `{ [1] }()[0].true` also doesn't"
+  ] },
+  { "_member_access": true,
+    "_target": {
+      "_application": true,
+      "_target": {
+        "_function": true,
+        "_does": [ { "_var_by_name": true, "_name": "object" } ]
+      }
+    },
+    "_member": "true"
+  },
+
+  { "_comment": true, "_note": "`{ [1] }()[0].true` also doesn't work properly in LuaBrat but there's no reason it shouldn't" },
+  { "_member_access": true,
+    "_target": {
+      "_index": true,
+      "_target": {
+        "_application": true,
+        "_target": {
+          "_function": true,
+          "_does": [ { "_literal": true, "_kind": "_deep_array", "_value": [1] } ]
+        }
+      },
+      "_indices": [ { "_literal": true, "_value": 0 } ]
+    },
+    "_member": "true"
+  },
+
+  { "_index": true,
+    "_target": { "_literal": true, "_kind": "_deep_array", "_value": [1] },
+    "_indices": [
+      { "_comment": true, "_note": "comment inside indices should be allowed" },
+      { "_literal": true, "_value": 1 }
+    ]
+  },
+
+  { "_comment": true, "_note": "just need a basic function in a var" },
+  { "_assignment": true, "_target": { "_var_by_name": true, "_name": "a" }, "_source": { "_function": true } },
+
+  { "_comment": true, "_multi": true, "_note": [
+    "the code `a = {}; [->a: 1][->a]` works and returns 1",
+    "perhaps unintentionally, so we ensure it works here too",
+    "the obvious best way to allow arbitrary non-string expression temporaries in the position of a hash key",
+    "is to represent the hash as an associative array and turn it into a hash at compile time",
+    "the other option is to use UUID keys and make the actual key a member of a special subobject"
+  ] },
+  { "_index": true,
+    "_target": {
+      "_literal": true,
+      "_kind": "_assoc",
+      "_value": [
+        [
+          { "_value_of": true, "_target": { "_var_by_name": true, "_name": "a" } },
+          { "_literal": true, "_value": 1 }
+        ]
+      ]
+    },
+    "_indices": [
+      { "_comment": true, "_note": "comment inside indices should be allowed" },
+      { "_value_of": true, "_target": { "_var_by_name": true, "_name": "a" } }
+    ]
+  },
+
+  { "_comment": true, "_note": "demonstrating exprkey, the other option mentioned in the last comment" },
+  { "_index": true,
+    "_target": {
+      "_literal": true,
+      "_kind": "_exprkey",
+      "_value": {
+        "random uuid key": {
+          "_exprkey": true,
+          "_key": { "_value_of": true, "_target": { "_var_by_name": true, "_name": "a" } },
+          "_value": { "_literal": true, "_value": 1 }
+        }
+      }
+    },
+    "_indices": [
+      { "_comment": true, "_note": "comment inside indices should be allowed" },
+      { "_value_of": true, "_target": { "_var_by_name": true, "_name": "a" } }
+    ]
+  }
 ]
