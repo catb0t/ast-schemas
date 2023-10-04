@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "yacl",
+  "title": "???",
+  "description": "???",
+
+  "definitions": {
+    "comment": {
+      "type": "object",
+      "required": [ "_comment", "_note" ],
+      "properties": {
+        "_comment": { "const": "true" },
+        "_note": { "type": ["array", "string"] }
+      }
+    },
+    "word": {
+      "definitions": {
+        "simple": {
+          "type": "string",
+          "pattern": "\S+"
+        },
+        "object": {
+          "type": "object",
+          "required": ["_name"],
+          "additionalProperties": false,
+          "properties": {
+            "_name": { "$ref": "#/definitions/word/definitions/simple" }
+          }
+        }
+      },
+      "oneOf": [
+        { "$ref": "#/definitions/word/definitions/simple" },
+        { "$ref": "#/definitions/word/definitions/object" }
+      ]
+    },
+
+    "lexeme": {
+      "oneOf": [
+        { "$ref": "#/definitions/comment" },
+        { "$ref": "#/definitions/literal" },
+        { "$ref": "#/definitions/word" }
+      ]
+    }
+  },
+
+  "type": "array",
+  "items": "#/definitions/lexeme",
+  "default": []
+}

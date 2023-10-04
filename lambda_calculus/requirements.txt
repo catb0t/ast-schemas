@@ -1,0 +1,2 @@
+jsonschema-specifications==2023.7.1
+jsonschema

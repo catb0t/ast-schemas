@@ -1,0 +1,22 @@
+define
+{
+    [Fold]<- {
+        rearrange
+        {
+            rearrange
+            {
+                dequote
+                choose
+                quote Result
+                pair pair pair {[Fold]<-} Function Result Remainder
+                Remainder
+            }
+            {Result Remainder}
+            dequote Function Base <-[terms] Source
+        }
+        {Function Base Source}
+    }
+}
+{
+    [Fold]<- {[literal]<-} {} {1 2 3}
+}

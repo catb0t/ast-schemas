@@ -1,0 +1,20 @@
+parse:strict
+==========
+"a string"
+"another string"
+
+3 "string 3"
+
+# comment between newline
+
+"string 4"
+
+==========
+"a string"
+"another string"
+
+3 "string 3"
+
+# comment between newline
+
+"string 4"

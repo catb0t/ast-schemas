@@ -1,0 +1,3 @@
+rearrange {third first second} {first second third} {This was the first item.} {This was the second item.} {This was the third item.}
+====
+{This was the third item.}{This was the first item.}{This was the second item.}

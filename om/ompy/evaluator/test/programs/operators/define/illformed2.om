@@ -1,0 +1,11 @@
+define
+{ X {Y} }
+Z
+====
+define
+{ X {Y} }
+Z
+====
+skip
+also no idea what this does in the reference impl.
+update: in the ref. impl., this does exactly what i guessed.

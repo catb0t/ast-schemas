@@ -1,0 +1,3 @@
+choose {It was empty.} {It was non-empty.} {}
+====
+{It was empty.}

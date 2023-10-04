@@ -1,0 +1,3 @@
+"otrip": {
+  "$comment": "the roundtrip meta-node. this node is not only used at the top of a file to signify that its source should roundtrip (i.e, preserve all insignificant whitespace and all formatting from the input source file, so that the deparser output is character-equivalent to the input.), but also to describe whitespace and formatting to preserve for the deparser. this is the 'most correct' form of parse->deparse execution, as direct equivalence is the goal."
+}

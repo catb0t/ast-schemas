@@ -1,0 +1,69 @@
+[
+  { "id": "operator", "value": "define" },
+  { "id": "operand", "value": [
+    { "id": "operator", "value": "[Fold]<-" },
+    { "id": "operand", "value": [
+      { "id": "operator", "value": "rearrange" },
+      { "id": "operand", "value": [
+        { "id": "operator", "value": "rearrange" },
+        { "id": "operand", "value": [
+          { "id": "operator", "value": "dequote" },
+          { "id": "separator", "value": 0 },
+          { "id": "operator", "value": "choose" },
+          { "id": "separator", "value": 1 },
+          { "id": "operator", "value": "quote" },
+          { "id": "separator", "value": 0 },
+          { "id": "operator", "value": "Result" },
+          { "id": "separator", "value": 1 },
+          { "id": "operator", "value": "pair" },
+          { "id": "separator", "value": 0 },
+          { "id": "operator", "value": "pair" },
+          { "id": "separator", "value": 0 },
+          { "id": "operator", "value": "pair" },
+          { "id": "operand", "value": [ { "id": "operator", "value": "[Fold]<-" } ] },
+          { "id": "operator", "value": "Function" },
+          { "id": "separator", "value": 0 },
+          { "id": "operator", "value": "Result" },
+          { "id": "separator", "value": 0 },
+          { "id": "operator", "value": "Remainder" },
+          { "id": "separator", "value": 1 },
+          { "id": "operator", "value": "Remainder" }
+        ] },
+        { "id": "operand", "value": [
+            { "id": "operator", "value": "Result" },
+            { "id": "separator", "value": 0 },
+            { "id": "operator", "value": "Remainder" }
+        ] },
+        { "id": "operator", "value": "dequote" },
+        { "id": "separator", "value": 0 },
+        { "id": "operator", "value": "Function" },
+        { "id": "separator", "value": 0 },
+        { "id": "operator", "value": "Base" },
+        { "id": "separator", "value": 0 },
+        { "id": "operator", "value": "<-[terms]" },
+        { "id": "separator", "value": 0 },
+        { "id": "operator", "value": "Source" }
+      ] },
+      { "id": "operand", "value": [
+        { "id": "operator", "value": "Function" },
+        { "id": "separator", "value": 0 },
+        { "id": "operator", "value": "Base" },
+        { "id": "separator", "value": 0 },
+        { "id": "operator", "value": "Source" }
+      ] }
+    ] }
+  ] },
+
+  { "id": "operand", "value": [
+    { "id": "operator", "value": "[Fold]<-" },
+    { "id": "operand", "value": [ { "id": "operator", "value": "[literal]<-" } ] },
+    { "id": "operand", "value": [] },
+    { "id": "operand", "value": [
+      { "id": "operator", "value": "1" },
+      { "id": "separator", "value": 0 },
+      { "id": "operator", "value": "2" },
+      { "id": "separator", "value": 0 },
+      { "id": "operator", "value": "3" }
+    ] }
+  ] }
+]

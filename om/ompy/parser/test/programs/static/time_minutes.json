@@ -1,0 +1,56 @@
+[
+  { "id": "operator", "value": "define" },
+  { "id": "separator", "value": 1 },
+  {
+    "id": "operand",
+    "value": [
+      { "id": "separator", "value": 0 },
+      { "id": "operator", "value": "minutes" },
+      { "id": "separator", "value": 0 },
+      {
+        "id": "operand",
+        "value": [
+          { "id": "separator", "value": 0 },
+          { "id": "operator", "value": "dequote" },
+          { "id": "separator", "value": 0 },
+          { "id": "operator", "value": "choose" },
+          { "id": "separator", "value": 0 },
+          {
+            "id": "operand",
+            "value": [ { "id": "operator", "value": "minutes" } ]
+          },
+          { "id": "separator", "value": 0 },
+          {
+            "id": "operand",
+            "value": [ ]
+          },
+          { "id": "separator", "value": 0 },
+          { "id": "operator", "value": "=" },
+          { "id": "separator", "value": 0 },
+          {
+            "id": "operand",
+            "value": [ { "id": "operator", "value": ":" } ]
+          },
+          { "id": "separator", "value": 0 },
+          { "id": "operator", "value": "<-[characters]" },
+          { "id": "separator", "value": 0 }
+        ]
+      },
+      { "id": "separator", "value": 0 }
+    ]
+  },
+  { "id": "separator", "value": 1 },
+  {
+    "id": "operand",
+    "value": [
+      { "id": "separator", "value": 0 },
+      { "id": "operator", "value": "minutes" },
+      { "id": "separator", "value": 0 },
+      {
+        "id": "operand",
+        "value": [ { "id": "operator", "value": "1:23" } ]
+      },
+      { "id": "separator", "value": 0 }
+    ]
+  }
+]

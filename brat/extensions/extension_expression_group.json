@@ -1,0 +1,13 @@
+{ "expression_group":
+  "$comment": "Not allowed in LuaBrat: a parenthesis-grouped lexical collection of expressions. What is the value of the expression group? Who knows."
+  "type": "object",
+  "required": ["id", "value"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "const": "expression_group" },
+    "value": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/expression" }
+    }
+  }
+}

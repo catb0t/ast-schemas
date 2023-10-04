@@ -1,0 +1,333 @@
+[
+  {
+    "name": "Float:integer literal & comment",
+    "trial": "5 # a comment",
+    "pos": [1, 14],
+
+    "normal_parse": [{
+      "id": "literal",
+      "value": 5
+    }, {
+      "id": "separator", "value": 0
+    }, {
+      "id": "comment",
+      "note": " a comment",
+      "extends_to_eof": true
+    }],
+
+    "strict_parse": [{
+      "id": "literal",
+      "value": 5,
+      "format_type": "i"
+    }, {
+      "id": "separator", "value": 0
+    }, {
+      "id": "comment",
+      "note": " a comment",
+      "extends_to_eof": true
+    }]
+  },
+
+  {
+    "name": "Comment & float:middle literal",
+    "trial": "#comment\n5.0",
+    "pos": [2, 4],
+
+    "normal_parse": [{
+      "id": "comment",
+      "note": "comment"
+    }, {
+      "id": "separator", "value": 1
+    }, {
+      "id": "literal",
+      "value": 5.0
+    }],
+
+    "strict_parse": [{
+      "id": "comment",
+      "note": "comment"
+    }, {
+      "id": "separator", "value": 1
+    }, {
+      "id": "literal",
+      "value": 5.0,
+      "format_type": "m"
+    }]
+  },
+
+  {
+    "name": "Float:right literal & multiline comment, no newline",
+    "trial": "5.#* comment! *#",
+    "pos": [1, 17],
+
+    "normal_parse": [{
+      "id": "literal",
+      "value": 5
+    }, {
+      "id": "comment",
+      "multi": true,
+      "note": [" comment! "]
+    }],
+
+    "strict_parse": [{
+      "id": "literal",
+      "value": 5.0,
+      "format_type": "r"
+    }, {
+      "id": "comment",
+      "multi": true,
+      "note": [" comment! "]
+    }]
+  },
+
+  {
+    "name": "Float:left & empty multiline comment, trailing newline",
+    "trial": ".222#**#\n",
+    "pos": [2, 1],
+
+    "normal_parse": [{
+      "id": "literal",
+      "value": 0.222
+    }, {
+      "id": "comment",
+      "multi": true
+    }, {
+      "id": "separator", "value": 1
+    }],
+
+    "strict_parse": [{
+      "id": "literal",
+      "value": 0.222,
+      "format_type": "l"
+    }, {
+      "id": "comment",
+      "multi": true
+    }, {
+      "id": "separator", "value": 1
+    }]
+  },
+
+  {
+    "name": "Float:integer literal & comment",
+    "trial": "5 # a comment",
+    "pos": [1, 14],
+
+    "normal_parse": [{
+      "id": "literal",
+      "value": 5
+    }, {
+      "id": "separator", "value": 0
+    }, {
+      "id": "comment",
+      "note": " a comment",
+      "extends_to_eof": true
+    }],
+
+    "strict_parse": [{
+      "id": "literal",
+      "value": 5,
+      "format_type": "i"
+    }, {
+      "id": "separator", "value": 0
+    }, {
+      "id": "comment",
+      "note": " a comment",
+      "extends_to_eof": true
+    }]
+  },
+
+  {
+    "name": "Float:middle literal & comment & float:middle literal",
+    "trial": "8.6#comment\n5.0",
+    "pos": [2, 4],
+
+    "normal_parse": [{
+      "id": "literal",
+      "value": 8.6
+    }, {
+      "id": "comment",
+      "note": "comment"
+    }, {
+      "id": "separator", "value": 1
+    }, {
+      "id": "literal",
+      "value": 5.0
+    }],
+
+    "strict_parse": [{
+      "id": "literal",
+      "value": 8.6,
+      "format_type": "m"
+    }, {
+      "id": "comment",
+      "note": "comment"
+    }, {
+      "id": "separator", "value": 1
+    }, {
+      "id": "literal",
+      "value": 5.0,
+      "format_type": "m"
+    }]
+  },
+
+  {
+    "name": "Float:left literal & multiline comment, no newline",
+    "trial": ".92#* comment! *#",
+    "pos": [1, 18],
+
+    "normal_parse": [{
+      "id": "literal",
+      "value": 0.92
+    }, {
+      "id": "comment",
+      "multi": true,
+      "note": [" comment! "]
+    }],
+
+    "strict_parse": [{
+      "id": "literal",
+      "value": 0.92,
+      "format_type": "l"
+    }, {
+      "id": "comment",
+      "multi": true,
+      "note": [" comment! "]
+    }]
+  },
+
+  {
+    "name": "Float:left & empty multiline comment, trailing newline",
+    "trial": ".42#**#\n",
+    "pos": [2, 1],
+
+    "normal_parse": [{
+      "id": "literal",
+      "value": 0.42
+    }, {
+      "id": "comment",
+      "multi": true
+    }, {
+      "id": "separator", "value": 1
+    }],
+
+    "strict_parse": [{
+      "id": "literal",
+      "value": 0.42,
+      "format_type": "l"
+    }, {
+      "id": "comment",
+      "multi": true
+    }, {
+      "id": "separator", "value": 1
+    }]
+  },
+
+  {
+    "name": "Floats, comments and newlines mixed",
+    "trial": "5.6 #comment1\n8.6 #comment2\n 5\n 2.7",
+    "pos": [4, 5],
+
+    "normal_parse": [{
+      "id": "literal",
+      "value": 5.6
+    }, {
+      "id": "separator", "value": 0
+    }, {
+      "id": "comment",
+      "note": "comment1"
+    }, {
+      "id": "separator", "value": 1
+    }, {
+      "id": "literal",
+      "value": 8.6
+    }, {
+      "id": "separator", "value": 0
+    }, {
+      "id": "comment",
+      "note": "comment2"
+    }, {
+      "id": "separator", "value": 1
+    }, {
+      "id": "literal",
+      "value": 5
+    }, {
+      "id": "separator", "value": 1
+    }, {
+      "id": "literal",
+      "value": 2.7
+    }],
+
+    "strict_parse": [{
+      "id": "literal",
+      "value": 5.6,
+      "format_type": "m"
+    }, {
+      "id": "separator", "value": 0
+    }, {
+      "id": "comment",
+      "note": "comment1"
+    }, {
+      "id": "separator", "value": 1
+    }, {
+      "id": "literal",
+      "value": 8.6,
+      "format_type": "m"
+    }, {
+      "id": "separator", "value": 0
+    }, {
+      "id": "comment",
+      "note": "comment2"
+    }, {
+      "id": "separator", "value": 1
+    }, {
+      "id": "separator", "value": 0
+    }, {
+      "id": "literal",
+      "value": 5,
+      "format_type": "i"
+    }, {
+      "id": "separator", "value": 1
+    }, {
+      "id": "separator", "value": 0
+    }, {
+      "id": "literal",
+      "value": 2.7,
+      "format_type": "m"
+    }]
+  },
+
+
+  {
+    "name": "Float:left & multiline comment & float:right, trailing newline & float:right literal",
+    "trial": ".5#**#\n6.",
+    "pos": [2, 3],
+
+    "normal_parse": [{
+      "id": "literal",
+      "value": 0.5
+    }, {
+      "id": "comment",
+      "multi": true
+    }, {
+      "id": "separator", "value": 1
+    }, {
+      "id": "literal",
+      "value": 6.0
+    }],
+
+    "strict_parse": [{
+      "id": "literal",
+      "value": 0.5,
+      "format_type": "l"
+    }, {
+      "id": "comment",
+      "multi": true
+    }, {
+      "id": "separator", "value": 1
+    }, {
+      "id": "literal",
+      "value": 6.0,
+      "format_type": "r"
+    }]
+  }
+]

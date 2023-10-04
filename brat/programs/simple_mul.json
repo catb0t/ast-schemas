@@ -1,0 +1,10 @@
+[
+  { "_application": true,
+    "_target": {
+      "_member_access": true,
+      "_target": { "_literal": true, "_value": 3 },
+      "_member": { "_var_by_name": true, "_name": "*" }
+    },
+    "_positional_args": [ { "_literal": true, "_value": 4 } ]
+  }
+]

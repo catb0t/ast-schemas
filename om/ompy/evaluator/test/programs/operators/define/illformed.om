@@ -1,0 +1,7 @@
+define
+{ {X} Y }
+{ X }
+====
+
+====
+the reference impl thinks the first form is meaningless or just partial and gives this define a value of nothing

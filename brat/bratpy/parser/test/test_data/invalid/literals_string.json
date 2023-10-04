@@ -1,0 +1,15 @@
+[
+  {
+    "name": "Unclosed string sq",
+    "trial": "'",
+    "normal_parse": [1, 0, [1, 1]],
+    "pos": [1, 2]
+  },
+
+  {
+    "name": "Unclosed string dq",
+    "trial": "\"",
+    "normal_parse": [1, 0, [1, 1]],
+    "pos": [1, 2]
+  }
+]

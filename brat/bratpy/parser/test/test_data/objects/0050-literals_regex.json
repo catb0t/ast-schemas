@@ -1,0 +1,96 @@
+[
+  {
+    "name": "Empty regex, no flags",
+    "trial": "@//",
+    "pos": [1, 4],
+
+    "normal_parse": [{
+      "id": "literal",
+      "kind": "regex"
+    }],
+
+    "strict_parse": [{
+      "id": "literal",
+      "kind": "regex"
+    }]
+  },
+
+  {
+    "name": "Basic regex w/ EOLs, no flags",
+    "trial": "@\n\n/\n\n/",
+    "strict_deparse_to": "@/\n\n/",
+    "pos": [5, 2],
+
+    "normal_parse": [{
+      "id": "literal",
+      "value": "\n\n",
+      "kind": "regex"
+    }],
+    "strict_parse": [{
+      "id": "literal",
+      "value": "\n\n",
+      "kind": "regex"
+    }]
+  },
+
+  {
+    "name": "Basic regex w/ EOLs, flags",
+    "trial": "@\naliMSX\n/\n\n/",
+    "strict_deparse_to": "@aliMSX/\n\n/",
+    "pos": [5, 2],
+
+    "normal_parse": [{
+      "id": "literal",
+      "value": {
+        "pattern": "\n\n",
+        "flags": "aliMSX"
+      },
+      "kind": "regex"
+    }],
+    "strict_parse": [{
+      "id": "literal",
+      "value": {
+        "pattern": "\n\n",
+        "flags": "aliMSX"
+      },
+      "kind": "regex"
+    }]
+
+  },
+
+  {
+    "name": "Empty regex, no flags but EOLs",
+    "trial": "@\n\n//",
+    "strict_deparse_to": "@//",
+    "pos": [3, 3],
+
+    "normal_parse": [{
+      "id": "literal",
+      "kind": "regex"
+    }],
+
+    "strict_parse": [{
+      "id": "literal",
+      "kind": "regex"
+    }]
+  },
+
+  {
+    "name": "Basic regex, no flags",
+    "trial": "@/abcdef/",
+    "pos": [1, 10],
+
+    "normal_parse": [{
+      "id": "literal",
+      "value": "abcdef",
+      "kind": "regex"
+    }],
+
+    "strict_parse": [{
+      "id": "literal",
+      "value": "abcdef",
+      "kind": "regex"
+    }]
+  }
+
+]

@@ -1,0 +1,155 @@
+[
+  {
+    "name": "Float:integer & comment",
+    "trial": "5 # a comment",
+    "pos": [1, 14],
+
+    "normal_parse": [{
+      "id": "literal",
+      "value": 5
+    }, {
+      "id": "separator", "value": 0
+    }, {
+      "id": "comment",
+      "note": " a comment",
+      "extends_to_eof": true
+    }],
+
+    "strict_parse": [{
+      "id": "literal",
+      "value": 5,
+      "format_type": "i"
+    }, {
+      "id": "separator", "value": 0
+    }, {
+      "id": "comment",
+      "note": " a comment",
+      "extends_to_eof": true
+    }]
+  },
+
+  {
+    "name": "Comment & bare float",
+    "trial": "#comment\n5.0",
+    "pos": [2, 4],
+
+    "normal_parse": [{
+      "id": "comment",
+      "note": "comment"
+    }, {
+      "id": "separator", "value": 1
+    }, {
+      "id": "literal",
+      "value": 5.0
+    }],
+
+    "strict_parse": [{
+      "id": "comment",
+      "note": "comment"
+    },  {
+      "id": "separator", "value": 1
+    }, {
+      "id": "literal",
+      "value": 5.0,
+      "format_type": "m"
+    }]
+  },
+
+  {
+    "name": "Float:right & multiline comment, no newline",
+    "trial": "5.#* comment! *#",
+    "pos": [1, 17],
+
+    "normal_parse": [{
+      "id": "literal",
+      "value": 5.0
+    }, {
+      "id": "comment",
+      "multi": true,
+      "note": [" comment! "]
+    }],
+
+    "strict_parse": [{
+      "id": "literal",
+      "value": 5.0,
+      "format_type": "r"
+    }, {
+      "id": "comment",
+      "multi": true,
+      "note": [" comment! "]
+    }]
+  },
+
+  {
+    "name": "Float:left & multiline comment, trailing newline",
+    "trial": ".5#**#\n",
+    "normal_deparse_to": "0.5 #**#\n",
+    "strict_deparse_to": ".5#**#\n",
+    "pos": [2, 1],
+
+    "normal_parse": [{
+      "id": "literal",
+      "value": 0.5
+    }, {
+      "id": "comment",
+      "multi": true
+    }, {
+      "id": "separator", "value": 1
+    }],
+
+    "strict_parse": [{
+      "id": "literal",
+      "value": 0.5,
+      "format_type": "l"
+    }, {
+      "id": "comment",
+      "multi": true
+    }, {
+      "id": "separator", "value": 1
+    }]
+  },
+
+  {
+    "name": "String sq & multiline comment, trailing newline",
+    "trial": "' '#**#\n",
+    "pos": [2, 1],
+
+    "normal_parse": [{
+      "id": "literal",
+      "value": " "
+    }, {
+      "id": "comment",
+      "multi": true
+    }, {
+      "id": "separator", "value": 1
+    }],
+
+    "strict_parse": [{
+      "id": "literal",
+      "value": " ",
+      "quote_type": "s"
+    }, {
+      "id": "comment",
+      "multi": true
+    }, {
+      "id": "separator", "value": 1
+    }]
+  },
+
+  {
+    "name": "String sq & multiline comment, trailing newline",
+    "trial": ":symbol#**#\n",
+    "pos": [2, 1],
+
+    "normal_parse": [{
+      "id": "literal",
+      "value": "symbol",
+      "kind": "symbol"
+    }, {
+      "id": "comment",
+      "multi": true
+    }, {
+      "id": "separator", "value": 1
+    }]
+  }
+]

@@ -1,0 +1,5 @@
+define
+{ minutes { dequote choose {minutes} {} = {:} <-[characters] } }
+{ minutes {1:23} }
+====
+define{minutes{dequote choose{minutes}{}={:}<-[characters]}}{minutes{1:23}}

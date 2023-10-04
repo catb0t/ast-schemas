@@ -1,0 +1,36 @@
+[
+  { "_comment": true, "_note": "store a function in a variable" },
+  { "_assignment": true,
+    "_target": { "_var_by_name": true, "_name": "x_func" },
+    "_source": {
+      "_function": true,
+      "_args": { "_required": [ "y" ] },
+      "_does": [
+        { "_comment": true, "_note": "apply a mathematical operator to the argument" },
+        { "_application": true,
+          "_target": {
+            "_member_access": true,
+            "_target": { "_var_by_name": true, "_name": "y" },
+            "_member": "*"
+          },
+          "_positional_args": [ { "_literal": true, "_value": 5 } ]
+        }
+      ]
+    }
+  },
+
+  { "_comment": true, "_note": "call p(x_func(6.22)) -> 31.1" },
+  { "_application": true,
+    "_target": {
+      "_member_access": true,
+      "_target": { "_var_by_name": true, "_name": "object" },
+      "_member": "p"
+    },
+    "_positional_args": [
+      { "_application": true,
+        "_target": { "_var_by_name": true, "_name": "x_func" },
+        "_positional_args": [ { "_literal": true, "_value": 6.22 } ]
+      }
+    ]
+  }
+]

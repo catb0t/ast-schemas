@@ -1,0 +1,17 @@
+[
+  { "id": "operand", "value": [
+    { "id": "operand", "value": [{ "id": "operator", "value": "A" }]},
+    { "id": "operator", "value": "B" },
+    { "id": "separator", "value": 0 },
+    { "id": "operator", "value": "C" },
+    { "id": "separator", "value": 0 },
+    { "id": "operator", "value": "D" },
+    { "id": "operand", "value": [{ "id": "operator", "value": "E" }]},
+    { "id": "operator", "value": "F" },
+    { "id": "separator", "value": 1 },
+    { "id": "operator", "value": "G" }
+  ]},
+  { "id": "operand", "value": [
+    { "id": "operator", "value": "H" }
+  ]}
+]

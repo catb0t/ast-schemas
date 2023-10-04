@@ -1,0 +1,205 @@
+[
+  {
+    "name": "Empty string sq",
+    "trial": "''",
+    "pos": [1, 3],
+
+    "normal_parse": [{
+      "id": "literal"
+    }],
+
+    "strict_parse": [{
+      "id": "literal",
+      "quote_type": "s"
+    }]
+  },
+
+  {
+    "name": "Empty string dq",
+    "trial": "\"\"",
+    "pos": [1, 3],
+
+    "normal_parse": [{
+      "id": "literal"
+    }],
+
+    "strict_parse": [{
+      "id": "literal",
+      "quote_type": "d"
+    }]
+  },
+
+  {
+    "name": "Basic string sq",
+    "trial": "'Some text!'",
+    "pos": [1, 13],
+
+    "normal_parse": [{
+      "id": "literal",
+      "value": "Some text!"
+    }],
+
+    "strict_parse": [{
+      "id": "literal",
+      "value": "Some text!",
+      "quote_type": "s"
+    }]
+  },
+
+  {
+    "name": "Basic string dq",
+    "trial": "\"Some text!\"",
+    "pos": [1, 13],
+
+    "normal_parse": [{
+      "id": "literal",
+      "value": "Some text!"
+    }],
+
+    "strict_parse": [{
+      "id": "literal",
+      "value": "Some text!",
+      "quote_type": "d"
+    }]
+  },
+
+  {
+    "name": "Nested single quotes, dq",
+    "trial": "\"''\"",
+    "pos": [1, 5],
+
+    "normal_parse": [{
+      "id": "literal",
+      "value": "''"
+    }],
+
+    "strict_parse": [{
+      "id": "literal",
+      "value": "''",
+      "quote_type": "d"
+    }]
+  },
+
+  {
+    "name": "Nested double quotes, sq",
+    "comment": "This tests the special case handled when roundtrip=False in node_readers.scalar_literal.string_quoting_handler, i.e where a single-quoted string contains unescaped double quotes. Deparsing this in the default manner with external double quotes is obviously wrong and creates two strings.",
+    "trial": "'\"\"'",
+    "pos": [1, 5],
+
+    "normal_parse": [{
+      "id": "literal",
+      "value": "\"\"",
+      "quote_type": "s"
+    }],
+
+    "strict_parse": [{
+      "id": "literal",
+      "value": "\"\"",
+      "quote_type": "s"
+    }]
+  },
+
+  {
+    "name": "Double nested single/double quotes, sq",
+    "comment": "Normal mode should not indicate double quotes",
+    "trial": "\"'\\\"\\\"'\"",
+    "pos": [1, 9],
+
+    "normal_parse": [{
+      "id": "literal",
+      "value": "'\\\"\\\"'"
+    }],
+
+    "strict_parse": [{
+      "id": "literal",
+      "value": "'\\\"\\\"'",
+      "quote_type": "d"
+    }]
+  },
+
+  {
+    "name": "Symbol incorrectly written as a string",
+    "comment": "A string that could be a symbol, should be a symbol, and is represented as such, even in strict parse/deparse mode. This obviously breaks roundtripping, but is an exception.",
+    "trial": "'this_is_actually_a_symbol'",
+    "pos": [1, 28],
+
+    "deparser_normal_variance": {
+      "kind": "symbol",
+      "__delete": ["quote_type"]
+    },
+
+    "normal_parse": [{
+      "id": "literal",
+      "value": "this_is_actually_a_symbol",
+      "kind": "symbol"
+    }]
+  },
+
+  {
+    "name": "Basic string with 3 literal EOLs, dq",
+    "trial": "\"\n\n\n\"",
+    "pos": [4, 2],
+
+    "normal_parse": [{
+      "id": "literal",
+      "value": "\n\n\n"
+    }],
+
+    "strict_parse": [{
+      "id": "literal",
+      "value": "\n\n\n",
+      "quote_type": "d"
+    }]
+  },
+
+  {
+    "name": "Basic string with 3 literal EOLs, sq",
+    "trial": "'\n\n\n'",
+    "pos": [4, 2],
+
+    "normal_parse": [{
+      "id": "literal",
+      "value": "\n\n\n"
+    }],
+
+    "strict_parse": [{
+      "id": "literal",
+      "value": "\n\n\n",
+      "quote_type": "s"
+    }]
+  },
+
+  {
+    "name": "Basic string with 3 literal EOLs and text, sq",
+    "trial": "'\n\n\nstr1'",
+    "pos": [4, 6],
+
+    "normal_parse": [{
+      "id": "literal",
+      "value": "\n\n\nstr1"
+    }],
+
+    "strict_parse": [{
+      "id": "literal",
+      "value": "\n\n\nstr1",
+      "quote_type": "s"
+    }]
+  },
+
+  {
+    "name": "Basic string with numbers/alpha, sq",
+    "trial": "'str 1'",
+    "pos": [1, 8],
+
+    "normal_parse": [{
+      "id": "literal",
+      "value": "str 1"
+    }],
+
+    "strict_parse": [{
+      "id": "literal",
+      "value": "str 1",
+      "quote_type": "s"
+    }]
+  }
+]

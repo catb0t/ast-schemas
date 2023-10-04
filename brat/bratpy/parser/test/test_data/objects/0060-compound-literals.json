@@ -1,0 +1,91 @@
+[
+  {
+    "name": "Array literal: basic, no whitespace",
+    "trial": "[]",
+    "pos": [1, 3],
+
+    "normal_parse": [{
+        "id": "literal",
+        "value": []
+    }],
+
+    "strict_parse": [{
+        "id": "literal",
+        "value": []
+    }]
+  },
+
+  {
+    "name": "Array literal: basic, whitespace",
+    "trial": "[ ]",
+    "pos": [1, 4],
+
+    "normal_parse": [{
+        "id": "literal",
+        "value": []
+    }],
+
+    "strict_parse": [{
+        "id": "literal",
+        "value": [ {"id": "separator", "value": 0} ]
+    }]
+  },
+
+  {
+    "name": "Deep Array literal, 1 element",
+    "trial": "[1]",
+    "pos": [1, 4],
+
+    "normal_parse": [{
+        "id": "literal",
+        "kind": "deep_array",
+        "value": [1]
+    }],
+
+    "strict_parse": [{
+        "id": "literal",
+        "kind": "deep_array",
+        "value": [1]
+    }]
+  },
+
+  {
+    "name": "Maybe-deep Array literal, 1 element, pre-whitespace",
+    "trial": "[ 1]",
+    "pos": [1, 4],
+
+    "normal_parse": [{
+        "id": "literal",
+        "kind": "deep_array",
+        "value": [1]
+    }],
+
+    "strict_parse": [{
+        "id": "literal",
+        "value": [
+          {"id": "separator", "value": 0},
+          {"id": "literal", "value": 1}
+        ]
+    }]
+  },
+
+  {
+    "name": "Maybe-deep Array literal, 1 element, post-whitespace",
+    "trial": "[1 ]",
+    "pos": [1, 4],
+
+    "normal_parse": [{
+        "id": "literal",
+        "kind": "deep_array",
+        "value": [1]
+    }],
+
+    "strict_parse": [{
+        "id": "literal",
+        "value": [
+          {"id": "literal", "value": 1},
+          {"id": "separator", "value": 0}
+        ]
+    }]
+  }
+]

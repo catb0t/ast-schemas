@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "bratpy-parser-test",
+  "title": "Bratpy Parser Test format, by Cat Stevens",
+  "description": "testing the Bratpy parser",
+
+  "definitions": {
+
+    "parse_result": {
+      "type": "object",
+      "required": [ "id" ]
+    },
+
+    "result_like": {
+      "oneOf": [
+        {
+          "type": "array",
+          "items": { "$ref": "#/definitions/parse_result" }
+        },
+        {
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 1
+        }
+      ]
+    },
+
+    "test": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "trial", "normal_parse", "pos"],
+
+      "properties": {
+        "name": { "type": "string" },
+        "comment": { "type": ["string", "array"] },
+        "skip": {
+          "type": ["boolean", "string"]
+        },
+
+        "trial": { "type": "string" },
+
+        "deparser_normal_variance": {
+          "type": "object"
+        },
+
+        "normal_parse": { "$ref": "#/definitions/result_like" },
+        "strict_parse": {
+          "oneOf": [
+            { "const": true },
+            { "$ref": "#/definitions/result_like" }
+          ]
+        },
+
+        "normal_deparse_to": { "type": "string" },
+        "strict_deparse_to": { "type": "string" },
+
+        "pos": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": { "type": "number" }
+        }
+      }
+    }
+  },
+
+  "type": "array",
+  "items": { "$ref": "#/definitions/test" },
+  "default": []
+}

@@ -1,0 +1,70 @@
+[
+  {
+    "name": "Empty unflagged regex, symbol, and float literal w/o whitespace",
+    "trial": "@//:symbol5.0",
+    "pos": [1, 14],
+
+    "normal_parse": [{
+      "id": "literal",
+      "kind": "regex"
+    }, {
+      "id": "literal",
+      "value": "symbol5",
+      "kind": "symbol"
+    }, {
+      "id": "separator", "value": 0
+    }, {
+      "id": "literal",
+      "value": 0
+    }],
+
+    "strict_parse": [{
+      "id": "literal",
+      "kind": "regex"
+    }, {
+      "id": "literal",
+      "value": "symbol5",
+      "kind": "symbol"
+    }, {
+      "id": "literal",
+      "value": 0,
+      "format_type": "l"
+    }]
+  },
+
+  {
+    "name": "Empty unflagged regex, symbol, and float literal w/ 1 space",
+    "trial": "@//:symbol 5.0",
+    "pos": [1, 15],
+
+    "normal_parse": [{
+      "id": "literal",
+      "kind": "regex"
+    }, {
+      "id": "literal",
+      "value": "symbol",
+      "kind": "symbol"
+    }, {
+      "id": "separator", "value": 0
+    }, {
+      "id": "literal",
+      "value": 5
+    }],
+
+    "strict_parse": [{
+      "id": "literal",
+      "kind": "regex"
+    }, {
+      "id": "literal",
+      "value": "symbol",
+      "kind": "symbol"
+    }, {
+      "id": "separator", "value": 0
+    }, {
+      "id": "literal",
+      "value": 5.0,
+      "format_type": "m"
+    }]
+  }
+
+]

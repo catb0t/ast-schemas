@@ -1,0 +1,85 @@
+[
+  {
+    "name": "Floats, strings and newlines mixed",
+    "trial": "5.6 \"string 1\"\n\n\n\n 8.6 \"string 2\"\n 5\n 2.7",
+    "pos": [7, 5],
+
+    "normal_parse": [{
+      "id": "literal",
+      "value": 5.6
+    }, {
+      "id": "separator", "value": 0
+    }, {
+      "id": "literal",
+      "value": "string 1"
+    }, {
+      "id": "separator", "value": 1
+    }, {
+      "id": "literal",
+      "value": 8.6
+    }, {
+      "id": "separator", "value": 0
+    }, {
+      "id": "literal",
+      "value": "string 2"
+    }, {
+      "id": "separator", "value": 1
+    }, {
+      "id": "literal",
+      "value": 5
+    }, {
+      "id": "separator", "value": 1
+    }, {
+      "id": "literal",
+      "value": 2.7
+    }],
+
+    "strict_parse": [{
+      "id": "literal",
+      "value": 5.6,
+      "format_type": "m"
+    }, {
+      "id": "separator", "value": 0
+    }, {
+      "id": "literal",
+      "value": "string 1",
+      "quote_type": "d"
+    }, {
+      "id": "separator", "value": 1
+    }, {
+      "id": "separator", "value": 1
+    }, {
+      "id": "separator", "value": 1
+    }, {
+      "id": "separator", "value": 1
+    }, {
+      "id": "separator", "value": 0
+    }, {
+      "id": "literal",
+      "value": 8.6,
+      "format_type": "m"
+    }, {
+      "id": "separator", "value": 0
+    }, {
+      "id": "literal",
+      "value": "string 2",
+      "quote_type": "d"
+    }, {
+      "id": "separator", "value": 1
+    }, {
+      "id": "separator", "value": 0
+    }, {
+      "id": "literal",
+      "value": 5,
+      "format_type": "i"
+    }, {
+      "id": "separator", "value": 1
+    }, {
+      "id": "separator", "value": 0
+    }, {
+      "id": "literal",
+      "value": 2.7,
+      "format_type": "m"
+    }]
+  }
+]

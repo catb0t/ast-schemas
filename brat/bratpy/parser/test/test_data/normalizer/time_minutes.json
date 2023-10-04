@@ -1,0 +1,20 @@
+[
+  { "id": "operator", "value": "define" },
+  { "id": "operand", "value": [
+      { "id": "operator", "value": "minutes" },
+      { "id": "operand", "value": [
+          { "id": "operator", "value": "dequote" },
+          { "id": "separator", "value": 0 },
+          { "id": "operator", "value": "choose" },
+          { "id": "operand", "value": [ { "id": "operator", "value": "minutes" } ] },
+          { "id": "operand", "value": [ ] },
+          { "id": "operator", "value": "=" },
+          { "id": "operand", "value": [ { "id": "operator", "value": ":" } ] },
+          { "id": "operator", "value": "<-[characters]" }
+      ] }
+  ] },
+  { "id": "operand", "value": [
+      { "id": "operator", "value": "minutes" },
+      { "id": "operand", "value": [ { "id": "operator", "value": "1:23" } ] }
+  ] }
+]

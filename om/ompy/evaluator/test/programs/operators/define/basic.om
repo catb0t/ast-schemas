@@ -1,0 +1,7 @@
+define
+{ X {Y} }
+{ X }
+====
+Y
+====
+reference impl returns literal dequoted Y here

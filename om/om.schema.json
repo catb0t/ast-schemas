@@ -1,0 +1,69 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "om",
+  "title": "Om AST description, by Cat Stevens",
+  "description": "describing the syntax of the Om language https://github.com/sparist/Om",
+
+  "definitions": {
+    "separator": {
+      "$comment": "A space (value: 0), linebreak (1) or tab (2) character; the identity function.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "id", "value" ],
+      "properties": {
+        "id": { "const": "separator" },
+        "value": { "enum": [0, 1, 2] }
+      }
+    },
+
+    "operand": {
+      "$comment": "Operand syntax is: {<program>}.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "id", "value" ],
+      "properties": {
+        "id": { "const": "operand" },
+        "value": { "$ref": "#/definitions/program" }
+      }
+    },
+
+    "operator": {
+      "$comment": "An operator is a term representing a free or bound name. An operator may be contained by an operand, but is not itself an operand. It may consist of any Unicode code point, but backquote (`), separator code points (\\n\\t ), and operand braces ({}) must be escaped by a preceding backquote (`), as in 'double` quote' or `{operator`}.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "id", "value" ],
+      "properties": {
+        "id": { "const": "operator" },
+        "value": {
+          "type": "string",
+          "pattern": "^(?:`[`\\n\\t {}]|[^`\\n\\t {}])+$"
+        }
+      }
+    },
+
+    "term": {
+      "$comment": "An operator or operand.",
+      "oneOf": [
+        { "$ref": "#/definitions/operator" },
+        { "$ref": "#/definitions/operand" }
+      ]
+    },
+
+    "element": {
+      "$comment": "A separator, or a term.",
+      "oneOf": [
+        { "$ref": "#/definitions/separator" },
+        { "$ref": "#/definitions/term" }
+      ]
+    },
+
+    "program": {
+      "$comment": "An ordered series of elements, the composition of which represents a program.",
+      "type": "array",
+      "items": { "$ref": "#/definitions/element" },
+      "default": []
+    }
+  },
+
+  "$ref": "#/definitions/program"
+}

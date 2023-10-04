@@ -1,0 +1,3 @@
+choose {X} {Y} drop {Z}
+====
+choose {X} {Y}

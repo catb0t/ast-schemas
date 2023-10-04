@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "brat-base",
+  "title": "Lambda Calculus AST description",
+  "description": "describing the syntax of the lambda calculus with JSON Schema",
+
+  "definitions": {
+    "name": {
+      "type": "object",
+      "required": ["_kind", "_name"],
+      "additionalProperties": false,
+      "properties": {
+        "_kind": { "const": "_name" },
+        "_name": { "type": "string" }
+      }
+    },
+    "lambda": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["_kind", "_bind", "_body"],
+      "properties": {
+        "_kind": { "const": "_lambda" },
+        "_bind": { "$ref": "#/definitions/name" },
+        "_body": { "$ref": "#/definitions/expression" }
+      }
+    },
+    "application": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/expression" }
+    },
+    "let": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["_kind", "_bind", "_body"],
+      "properties": {
+        "_kind": { "const": "_let" },
+        "_bind": { "$ref": "#/definitions/name" },
+        "_body": { "$ref": "#/definitions/expression" }
+      }
+    },
+    "expression": {
+      "oneOf": [
+        { "$ref": "#/definitions/name" },
+        { "$ref": "#/definitions/lambda" },
+        { "$ref": "#/definitions/application" },
+        { "$ref": "#/definitions/let" }
+      ]
+    }
+  },
+
+  "type": "array",
+  "items": { "$ref": "#/definitions/expression" },
+  "default": []
+}

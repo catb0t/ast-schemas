@@ -1,0 +1,107 @@
+[
+  {
+    "name": "Empty single-line comment, no newline",
+    "trial": "#",
+    "pos": [1, 2],
+
+    "normal_parse": [{
+      "id": "comment",
+      "extends_to_eof": true
+    }]
+  },
+  {
+    "name": "Empty single-line comment, with newline",
+    "trial": "#\n",
+    "pos": [2, 1],
+
+    "normal_parse": [{
+      "id": "comment"
+    }, {
+      "id": "separator",
+      "value": 1
+    }]
+  },
+  {
+    "name": "Single-line comment, no newline",
+    "trial": "# comment",
+    "pos": [1, 10],
+
+    "normal_parse": [{
+      "id": "comment",
+      "note": " comment",
+      "extends_to_eof": true
+    }]
+  },
+  {
+    "name": "Single-line comment, with newline",
+    "trial": "# comment\n",
+    "pos": [2, 1],
+
+    "normal_parse": [{
+      "id": "comment",
+      "note": " comment"
+    }, {
+      "id": "separator",
+      "value": 1
+    }]
+  },
+  {
+    "name": "Empty multi-line comment",
+    "trial": "#**#",
+    "pos": [1, 5],
+
+    "normal_parse": [{
+      "id": "comment",
+      "multi": true
+    }]
+  },
+  {
+    "name": "Multi-line comment",
+    "trial": "#* comment *#",
+    "pos": [1, 14],
+
+    "normal_parse": [{
+      "id": "comment",
+      "note": [" comment "],
+      "multi": true
+    }]
+  },
+  {
+    "name": "EOF Multi-line comment",
+    "trial": "#* com\nment",
+    "pos": [2, 5],
+
+    "normal_parse": [{
+      "id": "comment",
+      "note": [" com", "ment"],
+      "multi": true,
+      "extends_to_eof": true
+    }]
+  },
+  {
+    "name": "NON-LUABRAT: Nested multi-line comment",
+    "comment": "Not in LuaBrat; requires recursive implementation.",
+    "trial": "#* com #* ment *# *#",
+    "pos": [1, 21],
+    "skip": true,
+
+    "normal_parse": [{
+      "id": "comment",
+      "note": [" com ", " ment  "],
+      "multi": true
+    }]
+  },
+  {
+    "name": "NON-LUABRAT: Escaped nested multi-line comment",
+    "comment": "Obviously not in LuaBrat.",
+    "trial": "#* com `#* ment `*# *#",
+    "pos": [1, 23],
+    "skip": true,
+
+    "normal_parse": [{
+      "id": "comment",
+      "note": [" com #* ment *# "],
+      "multi": true
+    }]
+  }
+]

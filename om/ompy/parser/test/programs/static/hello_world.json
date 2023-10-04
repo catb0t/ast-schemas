@@ -1,0 +1,19 @@
+[
+  {
+    "id": "operand",
+    "value": [
+      {
+        "id": "operator",
+        "value": "Hello,"
+      },
+      {
+        "id": "separator",
+        "value": 0
+      },
+      {
+        "id": "operator",
+        "value": "world!"
+      }
+    ]
+  }
+]

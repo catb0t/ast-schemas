@@ -1,0 +1,29 @@
+[
+  { "id": "operator", "value": "drop" },
+  {
+    "id": "operand",
+    "value": [
+      { "id": "operator", "value": "This" },
+      { "id": "separator", "value": 0 },
+      { "id": "operator", "value": "is" },
+      { "id": "separator", "value": 0 },
+      { "id": "operator", "value": "a" },
+      { "id": "separator", "value": 0 },
+      { "id": "operator", "value": "comment." }
+    ]
+  },
+  {
+    "id": "operand",
+    "value": [
+      { "id": "operator", "value": "This" },
+      { "id": "separator", "value": 0 },
+      { "id": "operator", "value": "is" },
+      { "id": "separator", "value": 0 },
+      { "id": "operator", "value": "not" },
+      { "id": "separator", "value": 0 },
+      { "id": "operator", "value": "a" },
+      { "id": "separator", "value": 0 },
+      { "id": "operator", "value": "comment." }
+    ]
+  }
+]

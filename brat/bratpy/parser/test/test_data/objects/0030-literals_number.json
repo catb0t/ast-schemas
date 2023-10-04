@@ -1,0 +1,86 @@
+[
+  {
+    "name": "Float:integer literal zero",
+    "trial": "0",
+    "pos": [1, 2],
+
+    "normal_parse": [{
+      "id": "literal",
+      "value": 0
+    }],
+
+    "strict_parse": [{
+      "id": "literal",
+      "value": 0,
+      "format_type": "i"
+    }]
+  },
+
+  {
+    "name": "Float:integer literal",
+    "trial": "5",
+    "pos": [1, 2],
+
+    "normal_parse": [{
+      "id": "literal",
+      "value": 5.0
+    }],
+
+    "strict_parse": [{
+      "id": "literal",
+      "value": 5,
+      "format_type": "i"
+    }]
+  },
+
+  {
+    "name": "Float:middle literal (default parse)",
+    "trial": "5.0",
+    "pos": [1, 4],
+
+    "normal_parse": [{
+      "id": "literal",
+      "value": 5
+    }],
+
+    "strict_parse": [{
+      "id": "literal",
+      "value": 5.0,
+      "format_type": "m"
+    }]
+  },
+
+  {
+    "name": "Float:right literal",
+    "trial": "5.",
+    "pos": [1, 3],
+
+    "normal_parse": [{
+      "id": "literal",
+      "value": 5.0
+    }],
+
+    "strict_parse": [{
+      "id": "literal",
+      "value": 5.0,
+      "format_type": "r"
+    }]
+  },
+
+  {
+    "name": "Float:left literal",
+    "trial": ".5",
+    "pos": [1, 3],
+
+    "normal_parse": [{
+      "id": "literal",
+      "value": 0.5
+    }],
+
+    "strict_parse": [{
+      "id": "literal",
+      "value": 0.5,
+      "format_type": "l"
+    }]
+  }
+]
