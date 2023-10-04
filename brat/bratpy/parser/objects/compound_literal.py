@@ -1,4 +1,7 @@
+import copy
+from bratpy.schema_data import Key, recursive_all
 from enum import Enum
+from .node import Node
 
 
 class CompoundLiteral(Enum):
@@ -101,6 +104,43 @@ class CompoundLiteral(Enum):
 
     def ch_close():
         return CompoundLiteral.to_ch(CompoundLiteral.CLOSE)
+
+    def deepen(val):
+        if isinstance(val, list):
+            return list(map(CompoundLiteral.deepen, val))
+        elif isinstance(val, dict):
+            return CompoundLiteral.deepen(val[Key.VALUE])
+        else:
+            return val
+
+    def make_deep(initial_kind, basic_literal):
+        if not len(basic_literal):
+            return initial_kind, basic_literal
+
+        rec_key = Key.VALUE
+
+        def rec_key_func(v):
+            return isinstance(v, list)
+
+        def cond(_, val):
+            return isinstance(val, dict) \
+                and Node.node_is(val.get(Key.ID), Node.LITERAL)
+
+        if recursive_all(basic_literal, rec_key, rec_key_func, cond):
+            literal = copy.deepcopy(basic_literal)
+            literal = CompoundLiteral.deepen(literal)
+            return MAKE_DEEP_KIND_CONV.get(initial_kind), literal
+
+        return initial_kind, basic_literal
+
+
+MAKE_DEEP_KIND_CONV = {
+    None: 'deep_array',
+    'hash': 'deep_hash',
+
+    # 'exprkey': 'deep_exprkey',
+    # 'assoc': 'deep_assoc'
+}
 
 
 COMPOUND_OPEN = '['

@@ -9,7 +9,7 @@ def compound_literal_shared_name(*args):
 
 
 def compound_literal_value(parser_state):
-    if parser_state._debug():
+    if False and parser_state._debug():
         pass
         print(f"DEBUG: compound_literal_value debug: {parser_state}")
 
@@ -21,4 +21,4 @@ def compound_literal_value(parser_state):
 
     print(contents, parser_state)
 
-    return contents
+    return None, contents

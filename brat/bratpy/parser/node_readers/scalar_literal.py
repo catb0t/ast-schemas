@@ -1,7 +1,9 @@
 import re
-from bratpy.util import Key
-from ..objects import ScalarLiteral, SINGLE_INFO, DOUBLE_INFO
+from bratpy.schema_data import Key
+
 from .._parse_common import EOL
+
+from ..objects import ScalarLiteral, SINGLE_INFO, DOUBLE_INFO
 from .escapable_literal import escapable_literal_reader, \
     unescaped_delimiter_finder
 

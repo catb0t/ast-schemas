@@ -1,4 +1,4 @@
-from bratpy.util import Key
+from bratpy.schema_data import Key
 
 from ._parse_common import EOL, SEP_STR, \
     DoNotSkip, ParserState
@@ -48,7 +48,7 @@ def _do_parse_to_tree(parser_state: ParserState, break_on_test=None):
                        Node.create(nid, props, parser_state.line(),
                                    parser_state.col(), parser_state._debug()))
 
-        _tree_parse_debug(local_idx, ch, parser_state, source_view)
+        # _tree_parse_debug(local_idx, ch, parser_state, source_view)
 
         if parser_state.idx() < parser_state.skip_to_idx():
             parser_state.inc_idx()
@@ -64,9 +64,10 @@ def _do_parse_to_tree(parser_state: ParserState, break_on_test=None):
 
         # print("COL top", col)
         if ch in SEP_STR:
-            print(
-                f"SEP_STR: {repr(ch)} {parser_state.line()}:{parser_state.col()}"
-            )
+            if False:
+                print(
+                    f"SEP_STR: {repr(ch)} {parser_state.line()}:{parser_state.col()}"
+                )
 
             building.append(create_node(Node.SEPARATOR, {
                 Key.VALUE: SEP_STR.index(ch)
@@ -139,7 +140,6 @@ def _do_parse_to_tree(parser_state: ParserState, break_on_test=None):
                         'was incorrect! parser bug found!'
 
     # end for
-    print("bld", building)
 
     return building, parser_state.idx(), parser_state
 

@@ -1,6 +1,6 @@
 import sys
 
-from ._parse_impl import _parse
+from ._parse import _parse
 from ._deparse import _deparse
 
 res, line, col = _parse(source=sys.argv[1], roundtrip=False, _test=True,

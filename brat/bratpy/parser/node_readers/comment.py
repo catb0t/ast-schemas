@@ -27,7 +27,7 @@ def comment_value(parser_state, multi):
         comment = single_comment_reader.match(parser_state.source_view())
         is_eof = not comment.group(2)
         skip_len = comment.span()[1]
-        if parser_state._debug:
+        if False and parser_state._debug:
             print(
                 f"comment debug:\n\tmatch: {repr(comment)}, {is_eof}, {skip_len}")
 

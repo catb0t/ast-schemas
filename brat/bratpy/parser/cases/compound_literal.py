@@ -1,4 +1,4 @@
-from bratpy.util import Key
+from bratpy.schema_data import Key
 from ..objects import CompoundLiteral, Node
 from ..node_readers import compound_literal_value
 
@@ -20,8 +20,8 @@ class compound_literal():
 
         # print("CompoundLiteral handler", parser_state)
 
-        literal_info = compound_literal_value(parser_state)
-        print(f"literal_info: {literal_info}")
+        initial_kind, basic_literal = compound_literal_value(parser_state)
+        # print(f"literal_info: {literal_value}")
 
         parser_state.pop_scope()
         # print("CompoundLiteral handler pop scope ", )
@@ -30,7 +30,18 @@ class compound_literal():
         parser_state.inc_idx(len(CompoundLiteral.ch_close()))
         parser_state.inc_col(len(CompoundLiteral.ch_close()))
 
-        literal = {Key.VALUE: literal_info}
+        kind, literal_value = CompoundLiteral.make_deep(
+            initial_kind, basic_literal
+        )
+
+        literal = {
+            Key.VALUE: literal_value
+        }
+
+        print(literal)
+
+        if isinstance(literal, dict) and kind:
+            literal.update({Key.KIND: kind})
 
         return {
             Key.NODE_PROPS:   literal,

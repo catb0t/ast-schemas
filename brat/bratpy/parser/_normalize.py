@@ -1,7 +1,6 @@
 import copy
 
-from bratpy.util import Key
-from bratpy.schema_data import linear_selection, linear_selection_by
+from bratpy.schema_data import Key, linear_selection, linear_selection_by
 
 from .objects.node import Node
 from .objects.nolastid import NoLastID

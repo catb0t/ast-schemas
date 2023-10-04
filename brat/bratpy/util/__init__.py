@@ -8,22 +8,6 @@ import jsonschema
 from ..schema_data import linear_selection_by
 
 
-class _CommonKey():
-    ID = 'id'
-    KIND = 'kind'
-    VALUE = 'value'
-    TYPE = 'type'
-    NODE_PROPS = 'node_props'
-    NODE_ID = 'node_id'
-    SKIP_TO_IDX = 'skip_to_idx'
-    LINE = 'line'
-    COL = 'col'
-    HANDLER = 'handler'
-
-
-Key = _CommonKey
-
-
 def pprint_jscexc(ex):
     pprint.pprint({
         "message": ex.message,

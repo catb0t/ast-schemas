@@ -1,6 +1,5 @@
-from bratpy.util import Key
+from bratpy.schema_data import Key, linear_selection_by
 
-from ...schema_data import linear_selection_by
 from ..node_readers import comment_value
 from ..objects import Comment, Node
 
@@ -14,7 +13,7 @@ class comment():
 
     @staticmethod
     def handle(ch, parser_state, create_node):
-        if parser_state._debug():
+        if False and parser_state._debug():
             print(f'DEBUG: comment.handle: {parser_state}')
 
         multi = Comment.ch_is(
@@ -28,7 +27,7 @@ class comment():
             multi
         )
 
-        if parser_state._debug():
+        if False and parser_state._debug():
             print(
                 f"skip_len: {skip_len} add_line: {add_line} new_col: {new_col} multi: {multi}\n{parser_state}"
             )

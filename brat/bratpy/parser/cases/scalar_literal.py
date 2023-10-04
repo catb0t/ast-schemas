@@ -1,5 +1,4 @@
-from bratpy.util import Key
-from ...schema_data import linear_selection_by
+from bratpy.schema_data import Key, linear_selection_by
 from ..node_readers import scalar_literal_value
 from ..objects import Node, ScalarLiteral, DECIMAL_SEP
 from ..errors import literal as literal_error

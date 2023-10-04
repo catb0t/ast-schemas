@@ -1,4 +1,4 @@
-from ._parse_impl import _parse as parse, _parse_file as parse_file
+from ._parse import _parse as parse, _parse_file as parse_file
 from ._deparse import _deparse as deparse, _deparse_file as deparse_file
 from ._parse_common import SEP_STR, DoNotSkip, BratValidator, ParserState, \
     Scope

@@ -1,9 +1,8 @@
 import copy
 from enum import Enum
 
-from bratpy.util import Key
-
-from ...schema_data import linear_selection, linear_selection_by, SCHEMA_INFO
+from bratpy.schema_data import Key, is_any_instance_or_subclass, \
+    linear_selection, linear_selection_by, SCHEMA_INFO
 from .nolastid import NoLastID, _NoLastID
 
 
@@ -13,13 +12,6 @@ class NoFieldValue:
 
 def filter_no_field_value(args):
     return filter(lambda x: x is not NoFieldValue, args)
-
-
-def is_any_instance_or_subclass(val, types):
-    return (
-        map(lambda t: isinstance(val, t), types)
-        or map(lambda t: issubclass(val, t), types)
-    )
 
 
 class Node(Enum):
@@ -76,7 +68,7 @@ class Node(Enum):
         if isinstance(node, str):
             return IDS_TO_NODE_ENUMS[node]
         if isinstance(node, dict):
-            return IDS_TO_NODE_ENUMS[node[Key.ID]]
+            return Node.to_enum(node[Key.ID])
         raise ValueError(node)
 
     @staticmethod
@@ -145,7 +137,7 @@ class Node(Enum):
         }
         schema = NODE_FIELDS[Node.to_enum(node_id)]
         required_keys = schema['required'].keys()
-        # print(props)
+        print("props: ", props)
 
         if Key.ID in props:
             if not Node.node_is(props[Key.ID], node_id):

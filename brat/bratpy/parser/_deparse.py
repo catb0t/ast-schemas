@@ -1,7 +1,7 @@
 import json
 from io import StringIO
 
-from bratpy.util import Key
+from bratpy.schema_data import Key, is_any_instance_or_subclass
 
 from ._parse_common import SEP_STR
 from .objects import Comment, ScalarLiteral, \
@@ -56,8 +56,8 @@ def _deparse_to_string(elts, _inject_space=False):
     building = StringIO()
 
     for idx, e in enumerate(elts):
-        if not isinstance(e, dict):
-            raise ValueError(e)
+        # if not isinstance(e, dict):
+        #    raise ValueError(e)
         # TODO: look at prev/next nodes to tell where mandatory whitespace
         # should be inserted
         after_space = False
@@ -66,6 +66,11 @@ def _deparse_to_string(elts, _inject_space=False):
             Node.nodes_all_not_separator((e, elts[idx + 1]))
         ):
             after_space = _inject_space
+
+        # if is_any_instance_or_subclass(e, (str, int, float)):
+        #    building.write(str(e))
+        # elif is_any_instance_or_subclass(e, (list, dict)):
+        #    building, write(replace_deep_iterable(e))
 
         deparsed = {
             Node.SEPARATOR: replace_separator,

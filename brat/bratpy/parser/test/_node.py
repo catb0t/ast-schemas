@@ -1,8 +1,8 @@
 import unittest
 
-from bratpy.parser.objects.node import Node
+from bratpy.schema_data import Key
 
-from bratpy.util import Key
+from bratpy.parser.objects.node import Node
 
 
 class Test_Node(unittest.TestCase):
@@ -51,23 +51,18 @@ class Test_Node(unittest.TestCase):
     def test_node_can_subform(self):
         for val in (
             ({Key.ID: Node.SEPARATOR}, False),
-            ({Key.ID: Node.COMMENT}, '*', False),
-            (Node.LITERAL, '*', False),
-            (Node.LITERAL, 'array', False),
-            (Node.LITERAL, 'assoc', True),
-            (Node.LITERAL, 'deep_exprkey', True),
-            (Node.LITERAL, 'deep_array', True),
-            (Node.MEMBER_ACCESS, '*', True),
-            (Node.ASSIGNMENT, '*', True),
-            (Node.FUNCTION, '*', True),
+            ({Key.ID: Node.COMMENT}, False),
+            ({Key.ID: Node.LITERAL, Key.VALUE: []}, True),
+            ({Key.ID: Node.LITERAL, Key.VALUE: [], Key.KIND: 'deep_array'},
+                True),
+            ({Key.ID: Node.LITERAL, Key.VALUE: [], Key.KIND: 'assoc'}, True),
+            ({Key.ID: Node.LITERAL, Key.VALUE: [], Key.KIND: 'deep_exprkey'},
+                True),
+            ({Key.ID: Node.MEMBER_ACCESS}, True),
+            ({Key.ID: Node.ASSIGNMENT}, True),
+            ({Key.ID: Node.FUNCTION}, True),
         ):
-            (self.assertTrue if val[2] else self.assertFalse)(
-                Node.can_subform(
-                    {
-                        Key.ID: Node.to_id(val[0]),
-                        Key.KIND: val[1],
-                        Key.VALUE: []
-                    }
-                ),
+            (self.assertTrue if val[1] else self.assertFalse)(
+                Node.can_subform(val[0]),
                 f"failed with {val}"
             )
