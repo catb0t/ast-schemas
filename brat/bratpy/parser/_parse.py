@@ -3,7 +3,7 @@ from bratpy.schema_data import Key
 from ._parse_common import EOL, SEP_STR, \
     DoNotSkip, ParserState
 
-from ._normalize import normalize_separators, adjacent_literal_handler
+from ._normalize import normalize_separators, adjacent_literal_handler, remove_trailing_newline_chars
 
 from .objects import NoLastID, Block, Node
 from .cases import PARSER_CASES
@@ -157,8 +157,9 @@ def _parse(
         state = parser_state
         roundtrip = parser_state.roundtrip()
     else:
+        source_no_trailing = remove_trailing_newline_chars(source)
         state = ParserState(
-            source, fname,
+            source_no_trailing, fname,
             roundtrip=roundtrip, _debug=_debug
         )
 

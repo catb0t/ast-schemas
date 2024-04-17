@@ -32,32 +32,31 @@
   },
 
   {
-    "name": "Deep Array literal, 1 element",
+    "name": "Array literal, 1 element",
     "trial": "[1]",
     "pos": [1, 4],
 
     "normal_parse": [{
         "id": "literal",
-        "kind": "deep_array",
-        "value": [1]
+        "value": [ {"id": "literal", "value": 1} ]
     }],
 
     "strict_parse": [{
         "id": "literal",
-        "kind": "deep_array",
-        "value": [1]
+        "value": [ {"id": "literal", "format_type": "i", "value": 1} ]
     }]
   },
 
   {
-    "name": "Maybe-deep Array literal, 1 element, pre-whitespace",
+    "name": "Array literal, 1 element, pre-whitespace",
     "trial": "[ 1]",
     "pos": [1, 4],
 
     "normal_parse": [{
         "id": "literal",
-        "kind": "deep_array",
-        "value": [1]
+        "value": [
+          {"id": "literal", "value": 1}
+        ]
     }],
 
     "strict_parse": [{
@@ -70,14 +69,13 @@
   },
 
   {
-    "name": "Maybe-deep Array literal, 1 element, post-whitespace",
+    "name": "Array literal, 1 element, post-whitespace",
     "trial": "[1 ]",
     "pos": [1, 4],
 
     "normal_parse": [{
         "id": "literal",
-        "kind": "deep_array",
-        "value": [1]
+        "value": [ {"id": "literal", "value": 1} ]
     }],
 
     "strict_parse": [{

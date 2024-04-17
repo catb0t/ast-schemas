@@ -1,5 +1,5 @@
 from bratpy.schema_data import Key
-from ..objects import ScalarLiteral, CompoundLiteral
+from ..objects import ScalarLiteral, CompoundLiteral, Node
 
 DEFAULT_QUOTE_TYPE = 'd'
 
@@ -12,14 +12,6 @@ def literal_shared_name(*args):
 
 
 def replace_compound_literal(val):
-    def replace_deep_iterable(val):
-        if isinstance(val, list):
-            return " ".join(list)
-        elif isinstance(val, dict):
-            return " ".join(f"{k}: {v}" for k, v in val.items())
-        else:
-            raise ValueError(val)
-
     return ''.join((
         CompoundLiteral.to_ch(CompoundLiteral.OPEN),
         _deparse(val.get(Key.VALUE)),

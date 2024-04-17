@@ -1,11 +1,22 @@
 from pathlib import Path
 import pprint
 
-from ompy.evaluator import evaluate  # , parevde_file
+from ompy.evaluator import evaluate
+import ompy.parser as parser
 
 
-def evaluator(sourcef, targetf, force):
-    if sourcef == '-':
+def _parevde(prog: str) -> str:
+    return parser.deparse(evaluate(parser.parse(prog)))
+
+
+def _parevde_file(fp):
+    return _parevde(fp.read().rstrip('\n\r'))
+
+
+def evaluator(sourcef, cmd_code, targetf, force):
+    if cmd_code:
+        print(_parevde(sourcef))
+    elif sourcef == '-':
         print(
             'each line of input will be parsed -> evaluated -> deparsed',
             end=''
@@ -13,23 +24,27 @@ def evaluator(sourcef, targetf, force):
         if targetf:
             if not force and Path(targetf).exists():
                 raise FileExistsError(targetf)
-            print( ', and written to', targetf )
+            print(', and written to', targetf)
             with open(targetf, 'w') as fp:
                 try:
                     while True:
-                        res = evaluate( input('> ') )
+                        res = _parevde(input('Om > '))
                         pprint.pprint(res)
-                        print('\t  >>', targetf)
-                        fp.write('{' + res + '}')
+                        print('   >>', targetf)
+                        print('   < ', res)
+                        fp.write(res)
                 except (EOFError, KeyboardInterrupt):
                     print('\nbye!')
         else:
             print()
             while True:
-                print('<', evaluate( input('> ')) )
+                print('   <', _parevde(input('Om > ')))
     else:
+        source = None
         with open(sourcef, 'r') as fp:
-            source = evaluate(fp.read())
+            source = _parevde_file(fp)
+        if source is None:
+            return
         if targetf:
             with open(targetf, 'w') as fp:
                 fp.write(source)

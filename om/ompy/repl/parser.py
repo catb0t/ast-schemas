@@ -6,8 +6,10 @@ import pprint
 from ompy.parser import parse, parse_file, deparse, deparse_file
 
 
-def parser(sourcef, targetf, force):
-    if sourcef == '-':
+def parser(sourcef, cmd_code, targetf, force):
+    if cmd_code:
+        print(parse(sourcef))
+    elif sourcef == '-':
         if targetf:
             if not force and Path(targetf).exists():
                 raise FileExistsError(targetf)
@@ -20,7 +22,7 @@ def parser(sourcef, targetf, force):
                 try:
                     did_write = False
                     while True:
-                        res = parse( input('> ') )
+                        res = parse(input('> '))
                         pprint.pprint(res)
                         print('\t  >>', targetf)
                         if did_write:
@@ -33,7 +35,7 @@ def parser(sourcef, targetf, force):
                     fp.write('\n]\n')
         else:
             while True:
-                print('<', parse( input('> ') ))
+                print('<', parse(input('> ')))
     else:
         with open(sourcef, 'r') as fp:
             source = parse_file(fp)
@@ -56,7 +58,7 @@ def deparser(sourcef, targetf, force):
             with open(targetf, 'w') as fp:
                 try:
                     while True:
-                        res = deparse( json.loads(input('> ')) )
+                        res = deparse(json.loads(input('> ')))
                         pprint.pprint(res)
                         print('\t  >>', targetf)
                         fp.write('{' + res + '}')
@@ -64,7 +66,7 @@ def deparser(sourcef, targetf, force):
                     print('\nbye!')
         else:
             while True:
-                print('<', deparse( json.loads(input('> ')) ))
+                print('<', deparse(json.loads(input('> '))))
     else:
         with open(sourcef, 'r') as fp:
             source = deparse_file(fp)

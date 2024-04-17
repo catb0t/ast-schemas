@@ -1,0 +1,72 @@
+"deep": {
+  "$comment": "these can be deep literals if they only contain other literal values, but by default...",
+  "definitions": {
+    "hash": {
+      "additionalProperties": false,
+      "required": ["id", "value", "kind"],
+      "properties": {
+        "id": { "const": "literal" },
+        "kind": { "const": "deep_hash" },
+        "value": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/literal/definitions/bare" }
+        }
+      }
+    },
+    "array": {
+      "additionalProperties": false,
+      "required": ["id", "value", "kind"],
+      "properties": {
+        "id": { "const": "literal" },
+        "kind": { "const": "deep_array" },
+        "value": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/literal/definitions/bare" }
+        }
+      }
+    },
+    "assoc": {
+      "additionalProperties": false,
+      "required": ["id", "value", "kind"],
+      "properties": {
+        "id": { "const": "literal" },
+        "kind": { "const": "deep_assoc" },
+        "value": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": { "$ref": "#/definitions/literal/definitions/bare" }
+          }
+        }
+      }
+    },
+    "exprkey": {
+      "additionalProperties": false,
+      "required": ["id", "value", "kind"],
+      "properties": {
+        "id": { "const": "literal" },
+        "kind": { "const": "deep_exprkey" },
+        "value": {
+          "type": "object",
+          "additionalProperties": {
+            "additionalProperties": false,
+            "required": ["id", "key", "value"],
+            "properties": {
+              "id": { "const": "literal_deep_exprkey" },
+              "key": { "$ref": "#/definitions/literal/definitions/bare" },
+              "value": { "$ref": "#/definitions/literal/definitions/bare" }
+            }
+          }
+        }
+      }
+    }
+  },
+  "oneOf": [
+    { "$ref": "#/definitions/literal/definitions/compound/definitions/deep/definitions/hash" },
+    { "$ref": "#/definitions/literal/definitions/compound/definitions/deep/definitions/array" },
+    { "$ref": "#/definitions/literal/definitions/compound/definitions/deep/definitions/assoc" },
+    { "$ref": "#/definitions/literal/definitions/compound/definitions/deep/definitions/exprkey" }
+  ]
+},

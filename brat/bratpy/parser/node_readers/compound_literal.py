@@ -19,6 +19,6 @@ def compound_literal_value(parser_state):
             CompoundLiteral.ch_is_close(ch)
     )
 
-    print(contents, parser_state)
+    # print(contents, parser_state)
 
     return None, contents

@@ -1,21 +1,22 @@
 from ._parse_common import SEP_STR, NOT_OP, \
     DoNotSkip, NoLastID, Node, _node_is, _nodes_are, _node_from_id, \
-    _create_node
+    _node_is_any, _create_node
 
 # set the priority for keeping a significant separator
 SEP_PRIORITY = list(map(SEP_STR.index, '\n \t'))
 assert list(SEP_PRIORITY)
 assert list(SEP_PRIORITY)
 
+
 def getfunc(text_mode):
-    _src_test = lambda ch:  ch in SEP_STR
-    _obj_test = lambda elt: _node_is(elt, Node.SEPARATOR)
+    def _src_test(ch): return ch in SEP_STR
+    def _obj_test(elt): return _node_is(elt, Node.SEPARATOR)
 
     _src_kind = SEP_STR.index
-    _obj_kind = lambda elt: elt['value']
+    def _obj_kind(elt): return elt['value']
 
-    _src_next = lambda ch: Node.OPERAND if ch in NOT_OP else Node.OPERATOR
-    _obj_next = lambda elt: elt['id']
+    def _src_next(ch): return Node.OPERAND if ch in NOT_OP else Node.OPERATOR
+    def _obj_next(elt): return elt['id']
 
     def invalid_where(*x):
         raise ValueError(x)
@@ -34,11 +35,11 @@ def getfunc(text_mode):
 
 
 def _shrink_separator_span(
-            text_mode,
-            form,
-            span_begin_idx,
-            previous_node=NoLastID
-        ):
+    text_mode,
+    form,
+    span_begin_idx,
+    previous_node=NoLastID
+):
     '''
         shrink a run of separators down to zero or one (if it is significant)
 
@@ -183,3 +184,10 @@ def normalize_separators(form):
         elif _node_is(node, Node.OPERATOR):
             new_form.append(node)
     return new_form
+
+
+def next_non_separator(form):
+    for idx, node in enumerate(form):
+        if _node_is_any(node, set(Node.OPERAND, Node.OPERATOR)):
+            return idx, node
+    return -1, None

@@ -137,7 +137,7 @@ class Node(Enum):
         }
         schema = NODE_FIELDS[Node.to_enum(node_id)]
         required_keys = schema['required'].keys()
-        print("props: ", props)
+        # print("props: ", props)
 
         if Key.ID in props:
             if not Node.node_is(props[Key.ID], node_id):

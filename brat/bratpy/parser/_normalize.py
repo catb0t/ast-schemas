@@ -2,8 +2,7 @@ import copy
 
 from bratpy.schema_data import Key, linear_selection, linear_selection_by
 
-from .objects.node import Node
-from .objects.nolastid import NoLastID
+from .objects import Node, CompoundLiteral, NoLastID
 
 from ._parse_common import DoNotSkip
 
@@ -119,6 +118,10 @@ def merge_subform_properties(subforms, all_properties):
     return new_subforms
 
 
+def remove_trailing_newline_chars():
+    pass
+
+
 def normalize_separators(form):
     if not isinstance(form, list):
         raise ValueError('want list, got ' + repr(type(form)))
@@ -155,14 +158,14 @@ def normalize_separators(form):
             new_form.extend(new_part)
 
         elif Node.node_is_separator(e) \
-                and last_node == NoLastID \
-                and next_node == NoLastID:
+                and (last_node == NoLastID
+                     or next_node == NoLastID):
             pass
 
         elif Node.node_is_separator(e):
 
-            if (last_node == NoLastID or next_node == NoLastID) \
-                or (Node.node_is_not_separator(last_node)
+            # (last_node == NoLastID or next_node == NoLastID) \
+            if (Node.node_is_not_separator(last_node)
                     and Node.node_is_not_separator(next_node)):
 
                 new_form.append(e)

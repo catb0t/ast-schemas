@@ -16,6 +16,10 @@
 
     "normal_parse": [{
       "id": "comment"
+    }],
+
+    "strict_parse": [{
+      "id": "comment"
     }, {
       "id": "separator",
       "value": 1

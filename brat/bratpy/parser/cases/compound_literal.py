@@ -20,7 +20,7 @@ class compound_literal():
 
         # print("CompoundLiteral handler", parser_state)
 
-        initial_kind, basic_literal = compound_literal_value(parser_state)
+        kind, literal_value = compound_literal_value(parser_state)
         # print(f"literal_info: {literal_value}")
 
         parser_state.pop_scope()
@@ -29,10 +29,6 @@ class compound_literal():
 
         parser_state.inc_idx(len(CompoundLiteral.ch_close()))
         parser_state.inc_col(len(CompoundLiteral.ch_close()))
-
-        kind, literal_value = CompoundLiteral.make_deep(
-            initial_kind, basic_literal
-        )
 
         literal = {
             Key.VALUE: literal_value
