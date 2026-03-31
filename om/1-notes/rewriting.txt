@@ -1,0 +1,76 @@
+dequote dequote -> dequote dequote
+dequote {1} dequote {2} -> 1 2
+
+-- dequote (free operand)
+
+free            A
+input           dequote {A}
+rewrites as     om_dequote operand? {A}
+rewrites as     om_dequote om_is_operand {A}
+rewrites as     om_dequote {A}
+rewrites as     A
+rewrites as     A
+
+
+-- dequote (bound operand)
+
+bound           A       {define {A {drop swap {A result}}}}
+input           dequote {A} {B}
+rewrites as     om_dequote operand? {A} {B}
+rewrites as     om_dequote om_is_operand {A} {B}
+rewrites as     om_dequote {A} {B}
+rewrites as     A {B}
+rewrites as     call {drop swap {A result}}} {B}
+rewrites as     drop swap {A result} {B}
+rewrites as     om_drop om_swap {A result} {B}
+rewrites as     om_drop {B} {A result}
+rewrites as     {A result}
+
+-- dequote (free operator)
+
+free            A
+input           dequote A {B}
+rewrites as     om_dequote operand? A
+rewrites as     om_dequote om_is_operand A
+rewrites as     om_dequote {}
+
+rewrites as             operand? A {B}
+rewrites as     A {B}
+rewrites as     <rewriting starts over>
+rewrites as     operation? A {B}
+rewrites as     * see operation? <free>
+rewrites as     A {B}
+
+
+-- operand? (builtin)  truthy: x must not be an operator
+
+input           operand? {1}
+rewrites as     om_operand {1}
+rewrites as     {1}
+
+input           operand? 1
+rewrites as     om_operand 1
+rewrites as     {}
+
+-- operation?          truthy: x must be defined and an operator
+
+free            x
+input           operation? x     where x is free
+rewrites as     defined? operator? x
+rewrites as     om_defined om_operator x
+rewrites as     om_defined x
+rewrites as     {}
+
+bound           x
+input           operation? x
+rewrites as     defined? operator? x
+rewrites as     om_defined om_operator x
+rewrites as     om_defined x
+rewrites as     x
+
+free            {x}
+input           operation? {x}
+rewrites as     defined? operator? {x}
+rewrites as     om_defined om_operator {x}
+rewrites as     om_defined {}
+rewrites as     {}

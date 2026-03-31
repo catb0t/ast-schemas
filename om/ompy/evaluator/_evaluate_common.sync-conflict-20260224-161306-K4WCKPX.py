@@ -1,4 +1,4 @@
-from ompy.parser import node_is
+from ompy.parser import node_is, Node
 
 
 class _SkipEnd:
@@ -17,3 +17,11 @@ def find_next_node(form, node_like):
         if node_is(elt, node_like):
             return form[idx:], idx
     return None, -1
+
+
+def filter_operands(form):
+    result = []
+    for node in form:
+        if node_is(node, Node.OPERAND):
+            result.append(node)
+    return result

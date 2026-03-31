@@ -27,17 +27,17 @@ class Test_directories(unittest.TestCase):
     def setUp(self):
         self.maxDiff = None
 
+    # # @unittest.skip("no")
+    # def test_objects(self):
+    #     test_json_dir(self, OBJECTS, OBJECTS_DIR)
+    #
     # @unittest.skip("no")
-    def test_objects(self):
-        test_json_dir(self, OBJECTS, OBJECTS_DIR)
-
-    @unittest.skip("no")
-    def test_complex(self):
-        test_json_dir(self, COMPLEX, COMPLEX_DIR)
-
-    @unittest.skip("no")
-    def test_programs(self):
-        test_brat_dir(self, PROGRAMS, PROGRAMS_DIR)
+    # def test_complex(self):
+    #     test_json_dir(self, COMPLEX, COMPLEX_DIR)
+    #
+    # @unittest.skip("no")
+    # def test_programs(self):
+    #     test_brat_dir(self, PROGRAMS, PROGRAMS_DIR)
 
 
 if __name__ == '__main__':

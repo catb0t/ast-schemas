@@ -2,22 +2,21 @@ from .parse_common import SEP_STR
 
 
 def transform_separator(elt, bindings):
-    return SEP_STR[ elt['value'] ]
+    return SEP_STR[elt["value"]]
 
 
 def transform_operator(elt, bindings):
     return bindings.get(
-        elt['value'],
-        {'meta': {'replaced_from': elt['value']}, **elt}
+        elt["value"], {"meta": {"replaced_from": elt["value"]}, **elt}
     )
 
 
 def transform_operand(elt, bindings):
-    return transform1(elt['value'], up_bindings=bindings)
+    return transform1(elt["value"], up_bindings=bindings)
 
 
 def transform_builtin_operation(elt, bindings):
-    return elt['value'](bindings)
+    return elt["value"](bindings)
 
 
 def transform1(prog, up_bindings=None):
@@ -29,11 +28,11 @@ def transform1(prog, up_bindings=None):
         new_ast.insert(
             0,
             {
-                'separator': transform_separator,
-                'operator': transform_operator,
-                'operand': transform_operand,
-                'builtin_operation': transform_builtin_operation
-            }.get(elt['id'])(elt, local_bindings)
+                "separator": transform_separator,
+                "operator": transform_operator,
+                "operand": transform_operand,
+                "builtin_operation": transform_builtin_operation,
+            }.get(elt["id"])(elt, local_bindings),
         )
 
     return new_ast
@@ -41,4 +40,5 @@ def transform1(prog, up_bindings=None):
 
 def evaluate(prog):
     from .builtin_operations import operations
+
     return transform1(prog, operations)

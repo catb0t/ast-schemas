@@ -4,7 +4,7 @@ from bratpy.schema_data import Key, linear_selection, linear_selection_by
 
 from .objects import Node, CompoundLiteral, NoLastID
 
-from ._parse_common import DoNotSkip
+from ._parse_common import DoNotSkip, EOL, WIN_CR_EOL
 
 # set the priority for keeping a significant separator
 SEP_PRIORITY = [
@@ -118,8 +118,8 @@ def merge_subform_properties(subforms, all_properties):
     return new_subforms
 
 
-def remove_trailing_newline_chars():
-    pass
+def remove_trailing_newline_chars(source):
+    return source.rstrip(WIN_CR_EOL + EOL) + EOL
 
 
 def normalize_separators(form):

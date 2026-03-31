@@ -7,8 +7,8 @@ class CantParse(Enum):
 
 
 MESSAGES = {
-    CantParse.STRAY_CLOSE: ('close', 'open'),
-    CantParse.STRAY_OPEN: ('open', 'close')
+    CantParse.STRAY_CLOSE: ("close", "open"),
+    CantParse.STRAY_OPEN: ("open", "close"),
 }
 
 ERROR_FORMAT = "\n\nWhen parsing form {form}\n{bridge}\n{ptr}\nStray {kind} brace at line {line}, column {col}\n\t-> <{fname}>:{line}:{col}\n\t-> no matching {unkind} brace (did you mean to ` escape it?)"
@@ -29,15 +29,16 @@ class ParseError(Exception):
 
     def __str__(self):
         kind, unkind = MESSAGES[self.reason]
-        spaces = ' ' * (
-            19 + self.offset + sum(self.source.count(s) for s in ("\n", "\t")))
+        spaces = " " * (
+            19 + self.offset + sum(self.source.count(s) for s in ("\n", "\t"))
+        )
         return ERROR_FORMAT.format(
             kind=kind,
             unkind=unkind,
             fname=self.fname,
-            bridge=spaces + '|',
-            ptr=spaces + '^ HERE',
+            bridge=spaces + "|",
+            ptr=spaces + "^ HERE",
             line=self.line,
             col=self.col,
-            form=repr(self.source[self.begin:self.end])
+            form=repr(self.source[self.begin : self.end]),
         )

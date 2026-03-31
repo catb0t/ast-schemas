@@ -1,6 +1,6 @@
 import docopt
 
-__doc__ = '''Om.
+__doc__ = """Om.
 
 Usage:
     __main__.py (-h | --help)
@@ -17,7 +17,7 @@ Options:
     -f --force        Force-overwrite output file(s)
 
 Om-py v0.1, by Olivia (Cat) Stevens (catb0t)
-'''
+"""
 
 from .parser import parser, deparser
 from .evaluator import evaluator
@@ -26,15 +26,15 @@ from .evaluator import evaluator
 def main():
     args = docopt.docopt(__doc__)
     cmd_code = False
-    if args['-c']:
+    if args["-c"]:
         cmd_code = True
-    if args['parse']:
-        parser(args['<source>'], cmd_code, args['--json'], args['--force'])
-    elif args['deparse']:
-        deparser(args['<source>'], cmd_code, args['--om'], args['--force'])
-    elif args['evaluate']:
-        evaluator(args['<source>'], cmd_code, args['--om'], args['--force'])
+    if args["parse"]:
+        parser(args["<source>"], cmd_code, args["--json"], args["--force"])
+    elif args["deparse"]:
+        deparser(args["<source>"], cmd_code, args["--om"], args["--force"])
+    elif args["evaluate"]:
+        evaluator(args["<source>"], cmd_code, args["--om"], args["--force"])
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

@@ -1,0 +1,87 @@
+[
+  {
+    "name": "Float:integer literal roundtrip",
+    "trial": "5",
+    "roundtrip": true,
+    "want": [{
+      "id": "literal",
+      "value": 5,
+      "format_type": "i"
+    }],
+    "pos": [1, 2]
+  },
+  {
+    "name": "Float literal roundtrip",
+    "trial": "5.0",
+    "roundtrip": true,
+    "want": [{
+      "id": "literal",
+      "value": 5.0
+    }],
+    "pos": [1, 4]
+  },
+  {
+    "name": "Float:after literal roundtrip",
+    "trial": "5.",
+    "roundtrip": true,
+    "want": [{
+      "id": "literal",
+      "value": 5.0,
+      "format_type": "a"
+    }],
+    "pos": [1, 3]
+  },
+  {
+    "name": "Float:before literal roundtrip",
+    "trial": ".5",
+    "roundtrip": true,
+    "want": [{
+      "id": "literal",
+      "value": 0.5,
+      "format_type": "b"
+    }],
+    "pos": [1, 3]
+  },
+
+
+
+
+
+
+  {
+    "name": "Float:integer literal, no roundtrip",
+    "trial": "5",
+    "want": [{
+      "id": "literal",
+      "value": 5.0
+    }],
+    "pos": [1, 2]
+  },
+  {
+    "name": "Float literal, no roundtrip",
+    "trial": "5.0",
+    "want": [{
+      "id": "literal",
+      "value": 5.0
+    }],
+    "pos": [1, 4]
+  },
+  {
+    "name": "Float:after literal, no roundtrip",
+    "trial": "5.",
+    "want": [{
+      "id": "literal",
+      "value": 5.0
+    }],
+    "pos": [1, 3]
+  },
+  {
+    "name": "Float:before literal, no roundtrip",
+    "trial": ".5",
+    "want": [{
+      "id": "literal",
+      "value": 0.5
+    }],
+    "pos": [1, 3]
+  }
+]

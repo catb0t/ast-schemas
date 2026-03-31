@@ -10,43 +10,40 @@ def _parevde(prog: str) -> str:
 
 
 def _parevde_file(fp):
-    return _parevde(fp.read().rstrip('\n\r'))
+    return _parevde(fp.read().rstrip("\n\r"))
 
 
 def evaluator(sourcef, cmd_code, targetf, force):
     if cmd_code:
         print(_parevde(sourcef))
-    elif sourcef == '-':
-        print(
-            'each line of input will be parsed -> evaluated -> deparsed',
-            end=''
-        )
+    elif sourcef == "-":
+        print("each line of input will be parsed -> evaluated -> deparsed", end="")
         if targetf:
             if not force and Path(targetf).exists():
                 raise FileExistsError(targetf)
-            print(', and written to', targetf)
-            with open(targetf, 'w') as fp:
+            print(", and written to", targetf)
+            with open(targetf, "w") as fp:
                 try:
                     while True:
-                        res = _parevde(input('Om > '))
+                        res = _parevde(input("Om > "))
                         pprint.pprint(res)
-                        print('   >>', targetf)
-                        print('   < ', res)
+                        print("   >>", targetf)
+                        print("   < ", res)
                         fp.write(res)
                 except (EOFError, KeyboardInterrupt):
-                    print('\nbye!')
+                    print("\nbye!")
         else:
             print()
             while True:
-                print('   <', _parevde(input('Om > ')))
+                print("   <", _parevde(input("Om > ")))
     else:
         source = None
-        with open(sourcef, 'r') as fp:
+        with open(sourcef, "r") as fp:
             source = _parevde_file(fp)
         if source is None:
             return
         if targetf:
-            with open(targetf, 'w') as fp:
+            with open(targetf, "w") as fp:
                 fp.write(source)
         else:
             pprint.pprint(source)

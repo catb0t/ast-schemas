@@ -1,5 +1,8 @@
 from ._test_common import STATIC_DIR, NORM_DIR, ILLFORMED_DIR, OM_SCHEMA_FILE
 
 __all__ = [
-    'STATIC_DIR', 'NORM_DIR', 'ILLFORMED_DIR', 'OM_SCHEMA_FILE',
+    "STATIC_DIR",
+    "NORM_DIR",
+    "ILLFORMED_DIR",
+    "OM_SCHEMA_FILE",
 ]

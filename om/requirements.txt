@@ -1,2 +1,9 @@
 jsonschema
 docopt
+pylint
+pylsp-mypy==0.6.9
+pydocstyle
+black
+isort
+jedi
+jsonschema_specifications

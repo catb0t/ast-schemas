@@ -1,7 +1,6 @@
 from io import StringIO
 
-from ._parse_common import SEP_STR, \
-    Form, _form_to_ch, Node, _node_to_id
+from ._parse_common import SEP_STR, Form, _form_to_ch, Node, _node_to_id
 
 
 def replace_separator(val):
@@ -13,8 +12,11 @@ def replace_operator(val):
 
 
 def replace_operand(val):
-    return _form_to_ch(Form.OPEN) + _deparse_to_string(val).getvalue() \
+    return (
+        _form_to_ch(Form.OPEN)
+        + _deparse_to_string(val).getvalue()
         + _form_to_ch(Form.CLOSE)
+    )
 
 
 def _deparse_to_string(elts):
@@ -27,7 +29,7 @@ def _deparse_to_string(elts):
                 _node_to_id(Node.SEPARATOR): replace_separator,
                 _node_to_id(Node.OPERATOR): replace_operator,
                 _node_to_id(Node.OPERAND): replace_operand,
-            }.get(e['id'])(e['value'])
+            }.get(e["id"])(e["value"])
         )
     return building
 
@@ -38,4 +40,5 @@ def _deparse(elts):
 
 def _deparse_file(fp):
     import json
+
     return _deparse(json.load(fp))

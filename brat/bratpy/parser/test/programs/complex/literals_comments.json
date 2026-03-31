@@ -1,0 +1,115 @@
+[
+  {
+    "name": "Float:integer literal & comment, roundtrip",
+    "trial": "5 # a comment",
+    "roundtrip": true,
+    "want": [{
+      "id": "literal",
+      "value": 5,
+      "format_type": "i"
+    }, {
+      "id": "comment",
+      "note": " a comment",
+      "extends_to_eof": true
+    }],
+    "pos": [1, 14]
+  },
+  {
+    "name": "Comment & bare float literal, roundtrip",
+    "trial": "#comment\n5.0",
+    "roundtrip": true,
+    "want": [{
+      "id": "comment",
+      "note": "comment"
+    }, {
+      "id": "literal",
+      "value": 5.0
+    }],
+    "pos": [2, 4]
+  },
+  {
+    "name": "Float:after literal & multiline comment, no newline and roundtrip",
+    "trial": "5.#* comment! *#",
+    "roundtrip": true,
+    "want": [{
+      "id": "literal",
+      "value": 5.0,
+      "format_type": "a"
+    }, {
+      "id": "comment",
+      "multi": true,
+      "note": [" comment! "]
+    }],
+    "pos": [1, 17]
+  },
+  {
+    "name": "Float:before literal & multiline comment, trailing newline and roundtrip",
+    "trial": ".5#**#\n",
+    "roundtrip": true,
+    "want": [{
+      "id": "literal",
+      "value": 0.5,
+      "format_type": "b"
+    }, {
+      "id": "comment",
+      "multi": true
+    }],
+    "pos": [2, 1]
+  },
+
+
+
+
+
+
+  {
+    "name": "Float:integer literal & comment, no roundtrip",
+    "trial": "5 # a comment",
+    "want": [{
+      "id": "literal",
+      "value": 5
+    }, {
+      "id": "comment",
+      "note": " a comment",
+      "extends_to_eof": true
+    }],
+    "pos": [1, 14]
+  },
+  {
+    "name": "Comment & bare float literal, no roundtrip",
+    "trial": "#comment\n5.0",
+    "want": [{
+      "id": "comment",
+      "note": "comment"
+    }, {
+      "id": "literal",
+      "value": 5.0
+    }],
+    "pos": [2, 4]
+  },
+  {
+    "name": "Float:after literal & multiline comment, no newline, no roundtrip",
+    "trial": "5.#* comment! *#",
+    "want": [{
+      "id": "literal",
+      "value": 5.0
+    }, {
+      "id": "comment",
+      "multi": true,
+      "note": [" comment! "]
+    }],
+    "pos": [1, 17]
+  },
+  {
+    "name": "Float:before literal & multiline comment, trailing newline, no roundtrip",
+    "trial": ".5#**#\n",
+    "want": [{
+      "id": "literal",
+      "value": 0.5
+    }, {
+      "id": "comment",
+      "multi": true
+    }],
+    "pos": [2, 1]
+  }
+]

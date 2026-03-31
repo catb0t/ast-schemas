@@ -11,6 +11,7 @@ SEP_STR = ' \n\t'
 # lexical escape for anything that follows it including space/tab/newline
 ESCAPE = '\\'
 EOL = '\n'
+WIN_CR_EOL = '\r'
 
 
 Draft7Validator.check_schema(BRAT_SCHEMA)

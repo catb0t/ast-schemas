@@ -1,7 +1,7 @@
 from enum import Enum
 
 # our separators. please no changey order
-SEP_STR = ' \n\t'
+SEP_STR = " \n\t"
 
 
 class _DoNotSkip:
@@ -24,8 +24,8 @@ DoNotSkip = _DoNotSkip()
 def check_skip(val):
     if val is DoNotSkip or isinstance(val, _DoNotSkip):
         raise ValueError(
-            'OOPS! real value for `skip_to_idx` required in this context'
-            '\n\t(instead, it was a singleton NaN)\n\tparser bug found!'
+            "OOPS! real value for `skip_to_idx` required in this context"
+            "\n\t(instead, it was a singleton NaN)\n\tparser bug found!"
         )
     return val
 
@@ -42,19 +42,13 @@ NoLastID = _NoLastID
 
 
 class Form(Enum):
-    OPEN  = 0
+    OPEN = 0
     CLOSE = 1
 
 
-FORM_CHARS = {
-    Form.OPEN: '{',
-    Form.CLOSE: '}'
-}
+FORM_CHARS = {Form.OPEN: "{", Form.CLOSE: "}"}
 
-CHARS_TO_FORMS = {
-    '{': Form.OPEN,
-    '}': Form.CLOSE
-}
+CHARS_TO_FORMS = {"{": Form.OPEN, "}": Form.CLOSE}
 
 
 def _ch_is(ch, base):
@@ -81,29 +75,28 @@ NOT_OP = (_form_to_ch(Form.OPEN), _form_to_ch(Form.CLOSE), *SEP_STR)
 
 class Node(Enum):
     SEPARATOR = 0
-    OPERATOR  = 1
-    OPERAND  = 2
+    OPERATOR = 1
+    OPERAND = 2
 
 
 NODE_IDS = {
-    Node.SEPARATOR: 'separator',
-    Node.OPERATOR: 'operator',
-    Node.OPERAND: 'operand'
+    Node.SEPARATOR: "separator",
+    Node.OPERATOR: "operator",
+    Node.OPERAND: "operand",
 }
 
 IDS_TO_NODES = {
-    'separator': Node.SEPARATOR,
-    'operator': Node.OPERATOR,
-    'operand': Node.OPERAND
+    "separator": Node.SEPARATOR,
+    "operator": Node.OPERATOR,
+    "operand": Node.OPERAND,
 }
 
 
 def _node_is(node, base):
-    if not isinstance(base, Node) or \
-            base is NoLastID or isinstance(base, _NoLastID):
+    if not isinstance(base, Node) or base is NoLastID or isinstance(base, _NoLastID):
         raise ValueError(base)
     if isinstance(node, dict):
-        return node['id'] == NODE_IDS[base]
+        return node["id"] == NODE_IDS[base]
     if isinstance(node, str):
         return node == NODE_IDS[base]
     if isinstance(node, Node):
@@ -111,8 +104,7 @@ def _node_is(node, base):
     if node is NoLastID or isinstance(node, _NoLastID):
         return False
     if node is None:
-        raise DeprecationWarning(
-            'use of None in place of NoLastID (valve, pls fix)')
+        raise DeprecationWarning("use of None in place of NoLastID (valve, pls fix)")
     raise ValueError(node)
 
 
@@ -137,4 +129,4 @@ def _node_from_id(nid):
 
 
 def _create_node(nid, value):
-    return {'id': NODE_IDS[nid], 'value': value}
+    return {"id": NODE_IDS[nid], "value": value}
